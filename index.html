@@ -450,19 +450,19 @@
             const link = spotifyLinkInput.value.trim();
             if (link) {
                 let embedLink = link;
-                if (link.includes("open.spotify.com/")) { // Transforma URL de usuario a embed
-                    const type = link.includes("/playlist/") ? "playlist" : link.includes("/album/") ? "album" : link.includes("/track/") ? "track" : null;
-                    if (type) {
-                        const id = link.substring(link.lastIndexOf('/') + 1).split('?')[0];
-                        embedLink = `https://open.spotify.com/embed/${type}/${id}`;
-                    } else {
-                         showTemporaryMessage(spotifyMessagePlaceholder, 'Enlace de Spotify no parece ser de playlist, álbum o canción.', 'error');
-                        return;
-                    }
-                } else if (!link.includes("open.spotify.com/embed/")) {
-                     showTemporaryMessage(spotifyMessagePlaceholder, 'Enlace de Spotify no válido. Usa el enlace "embed" o el enlace directo.', 'error');
+                // Regex para extraer tipo y ID de varios formatos de URL de Spotify
+                const spotifyRegex = /https?:\/\/open\.spotify\.com\/(user\/[a-zA-Z0-9]+\/)?(playlist|track|album|episode|show)\/([a-zA-Z0-9]+)/;
+                const match = link.match(spotifyRegex);
+
+                if (match && match[2] && match[3]) {
+                    const type = match[2];
+                    const id = match[3];
+                    embedLink = `https://open.spotify.com/embed/${type}/${id}`;
+                } else if (!link.includes("https://open.spotify.com/embed/")) {
+                     showTemporaryMessage(spotifyMessagePlaceholder, 'Enlace de Spotify no válido. Usa el enlace "Compartir > Insertar playlist/canción/álbum" o el enlace directo.', 'error', 5000);
                     return;
                 }
+
 
                 spotifyEmbedUrl = embedLink;
                 if (musicEnabled) {
@@ -500,7 +500,7 @@
                 if (musicEnabled && currentMode === 'work' && !isPaused) {
                      setTimeout(() => { 
                         spotifyPlayer.contentWindow.postMessage(JSON.stringify({ command: 'play' }), '*');
-                    }, 500); // Aumentado el delay por si acaso
+                    }, 500);
                 }
             };
         }
@@ -511,7 +511,7 @@
             aiModeStudyButton.classList.add('active');
             aiModeCreativityButton.classList.remove('active');
             aiResponseContainer.className = 'mt-6 p-4 rounded-lg min-h-[50px] whitespace-pre-wrap ai-response-study';
-            if (!aiResponseContainer.classList.contains('hidden')) aiResponseContainer.classList.add('hidden'); // Ocultar si ya hay respuesta
+            if (!aiResponseContainer.classList.contains('hidden')) aiResponseContainer.classList.add('hidden'); 
         });
 
         aiModeCreativityButton.addEventListener('click', () => {
@@ -543,8 +543,9 @@
             }
 
             try {
-                // IMPORTANTE: Dejar apiKey vacía para que Canvas la inyecte.
-                const apiKey = ""; 
+                // Usando la clave de API proporcionada directamente.
+                // Si se ejecuta en un entorno que inyecta la clave (como Canvas), la línea original era: const apiKey = "";
+                const apiKey = "AIzaSyCSSfVuLqCyrQIRZqWGULr8BxoMmLLY4OY"; 
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
                 
                 const payload = {
@@ -570,7 +571,6 @@
                     result.candidates[0].content.parts.length > 0) {
                     const text = result.candidates[0].content.parts[0].text;
                     aiResponseContainer.textContent = text;
-                    // Aplicar clase de estilo correcta según el modo, por si se cambió mientras cargaba
                     aiResponseContainer.className = `mt-6 p-4 rounded-lg min-h-[50px] whitespace-pre-wrap ${currentAiMode === 'study' ? 'ai-response-study' : 'ai-response-creativity'}`;
                 } else {
                     aiResponseContainer.textContent = 'No se pudo obtener una respuesta con el formato esperado.';
@@ -598,12 +598,12 @@
 
         // Inicialización al cargar la página
         function initializeApp() {
-            notificationSound.src = selectedAlarmSound; // Cargar sonido inicial
+            notificationSound.src = selectedAlarmSound; 
             timerProgress.style.strokeDasharray = CIRCLE_CIRCUMFERENCE;
             timerProgress.style.strokeDashoffset = 0; 
             updateDisplay();
             updateCurrentModeDisplay();
-            aiModeStudyButton.click(); // Activar modo estudio por defecto
+            aiModeStudyButton.click(); 
         }
 
         initializeApp();
@@ -611,3 +611,4 @@
     </script>
 </body>
 </html>
+
