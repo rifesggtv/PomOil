@@ -11,7 +11,7 @@
     <style>
         body {
             font-family: 'Lato', sans-serif;
-            background-color: #fdf6f0;
+            background-color: #fdf6f0; 
             color: #2f2f2f;
         }
         .font-main-title { font-family: 'Merriweather', serif; }
@@ -25,16 +25,7 @@
         .btn-control:hover { background-color: #8aa073; }
         .input-style { border: 1px solid #9e683b; background-color: #fff; color: #3b3b3b; }
         .input-style::placeholder { color: #9e683b; opacity: 0.7; }
-        .input-file-style {
-            border: 2px dashed #9e683b;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-        .input-file-style:hover {
-            background-color: #fbf3eb;
-        }
+        
         .timer-circle-bg { stroke: #e0d8d0; }
         .timer-circle-progress { stroke: #9e683b; stroke-linecap: round; transform-origin: 50% 50%; transform: rotate(-90deg); transition: stroke-dashoffset 1s linear; }
         .soft-shadow { box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); }
@@ -46,96 +37,115 @@
         .section-oil-effect::before { top: -5px; left: 2%; width: 96%; height: 15px; background: linear-gradient(to bottom, rgba(158, 104, 59, 0.3), transparent); filter: blur(3px); }
         .section-oil-effect::after { bottom: -5px; left: 2%; width: 96%; height: 15px; background: linear-gradient(to top, rgba(158, 104, 59, 0.3), transparent); filter: blur(3px); }
         
-        .player-container iframe { 
-            border-radius: 12px; 
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            width: 100%;
-            height: 100%;
-        }
-        .player-wrapper {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
-            height: 0;
+        .player-wrapper { /* Para Spotify */
+            position: relative; 
+            height: 80px; 
             overflow: hidden;
             max-width: 100%;
-            background: #f0f0f0; /* Placeholder background */
             border-radius: 12px;
+             background: #f0f0f0; 
         }
         .player-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
+            border-radius: 12px; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
 
-
-        .temporary-message {
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
-            margin-top: 0.5rem;
-            text-align: center;
-        }
+        .temporary-message { padding: 0.5rem 1rem; border-radius: 0.375rem; font-size: 0.875rem; margin-top: 0.5rem; text-align: center; }
         .message-error { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
         .message-success { background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
 
-        .ai-response-study {
-            background-color: #eef2ff; 
-            border-left: 4px solid #6366f1; 
-            color: #3730a3;
+        .ai-response-study { background-color: #eef2ff; border-left: 4px solid #6366f1; color: #3730a3; }
+        .ai-response-creativity { background-color: #fff7ed; border-left: 4px solid #f97316; color: #9a3412; }
+        .ai-mode-button.active { background-color: #9e683b; color: #fdf6f0; font-weight: bold; }
+        .ai-mode-button { background-color: #e0d8d0; color: #3b3b3b; }
+
+        /* Apoyo Visual */
+        #imageUploadDropArea {
+            border: 2px dashed #9e683b;
+            padding: 1.5rem; 
+            border-radius: 0.75rem; 
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+            background-color: #fbf3eb; 
         }
-        .ai-response-creativity {
-            background-color: #fff7ed; 
-            border-left: 4px solid #f97316; 
-            color: #9a3412;
+        #imageUploadDropArea.dragover {
+            background-color: #f5e9dd; 
+            border-color: #c28f52; 
         }
-        .ai-mode-button.active {
-            background-color: #9e683b; 
-            color: #fdf6f0;
-            font-weight: bold;
-        }
-         .ai-mode-button {
+        #uploadedImagePreview { max-height: 200px; max-width: 100%; object-fit: contain; border-radius: 0.5rem; border: 1px solid #d1c5b8; }
+        #imageModal { z-index: 100; }
+        #enlargedImageView { max-height: 80vh; max-width: 80vw; object-fit: contain; border-radius: 0.5rem; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        #closeImageModalButton { position: absolute; top: 1rem; right: 1rem; background-color: rgba(0,0,0,0.5); color: white; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; transition: background-color 0.2s ease; }
+        #closeImageModalButton:hover { background-color: rgba(0,0,0,0.7); }
+
+        /* Visualizador de Audio Ambiental Vertical */
+        #ambientAudioVisualizerCanvasVertical {
+            width: 100%; 
+            height: 150px; 
             background-color: #e0d8d0; 
-            color: #3b3b3b; 
+            border-radius: 8px;
+            margin: 1rem auto 0 auto; /* Ajuste de margen superior */
+            border: 1px solid #c2b6a9;
+        }
+        #ambientAudioWarning { margin-top: 0.5rem; font-size: 0.8rem; color: #8c6f56; text-align: center; min-height: 1.2em; }
+        .btn-visualizer-action { background-color: #8aa073; color: #fdf6f0; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin-bottom: 0.5rem; transition: background-color 0.3s ease; }
+        .btn-visualizer-action:hover { background-color: #657153; }
+        #ambientAudioVisualizerSection .youtube-search-form { 
+            margin-top: 1rem; 
+            display: flex; 
+            gap: 0.5rem; 
+            justify-content: center;
+        }
+        #ambientAudioVisualizerSection .youtube-search-input { 
+            padding: 0.6rem; 
+            font-size: 0.9rem; 
+            border-radius: 5px; 
+            border: 1px solid #9e683b; 
+            width: 200px; 
+            background-color: #fff;
+        }
+        #ambientAudioVisualizerSection .youtube-search-button { 
+            background: #9e683b; 
+            color: white; 
+            border: none; 
+            padding: 0.6rem 1rem; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 0.9rem;
         }
 
-        #uploadedImagePreview {
-            max-height: 200px; 
-            max-width: 100%;
-            object-fit: contain;
-            border-radius: 0.5rem;
-            border: 1px solid #d1c5b8;
-        }
-        #imageModal {
-            z-index: 100; 
-        }
-        #enlargedImageView {
-            max-height: 80vh;
-            max-width: 80vw;
-            object-fit: contain;
-            border-radius: 0.5rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
-        #closeImageModalButton {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background-color: rgba(0,0,0,0.5);
-            color: white;
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
+        /* Lista de Tareas (To-Do List) */
+        #todoSection .todo-input-group { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+        #todoSection #todoInput { flex-grow: 1; }
+        #todoSection #addTodoButton { background-color: #657153; /* Verde oliva */ }
+        #todoSection #todoList { list-style: none; padding: 0; }
+        #todoSection .todo-item {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
+            justify-content: space-between;
+            padding: 0.75rem;
+            background-color: #fbf3eb; 
+            border: 1px solid #e0d8d0; 
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
             cursor: pointer;
             transition: background-color 0.2s ease;
         }
-        #closeImageModalButton:hover {
-            background-color: rgba(0,0,0,0.7);
+        #todoSection .todo-item:hover { background-color: #f5e9dd; }
+        #todoSection .todo-item.completed span { text-decoration: line-through; color: #8c6f56; }
+        #todoSection .todo-item .delete-todo {
+            background-color: transparent;
+            border: none;
+            color: #c28f52; 
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.25rem;
         }
+        #todoSection .todo-item .delete-todo:hover { color: #9e683b; }
+
     </style>
 </head>
 <body class="bg-canvas text-main min-h-screen flex flex-col items-center p-4 selection:bg-[#9e683b] selection:text-[#fdf6f0]">
@@ -153,9 +163,7 @@
                         <circle class="timer-circle-bg" cx="50" cy="50" r="45" stroke-width="8" fill="none"></circle>
                         <circle id="timerProgress" class="timer-circle-progress" cx="50" cy="50" r="45" stroke-width="8" fill="none" stroke-dasharray="282.74" stroke-dashoffset="0"></circle>
                     </svg>
-                    <div id="timeDisplay" class="absolute inset-0 flex items-center justify-center text-4xl md:text-5xl font-main-title text-timer font-bold">
-                        25:00
-                    </div>
+                    <div id="timeDisplay" class="absolute inset-0 flex items-center justify-center text-4xl md:text-5xl font-main-title text-timer font-bold">25:00</div>
                 </div>
                 <div class="flex space-x-3 mb-6">
                     <button id="startButton" class="btn-active px-6 py-2 rounded-lg font-semibold text-lg">Iniciar</button>
@@ -178,15 +186,14 @@
 
         <section id="imageReferenceSection" class="bg-canvas p-6 rounded-xl soft-shadow artistic-border section-oil-effect">
             <h2 class="font-artistic text-2xl text-timer mb-4 text-center">Tu Apoyo Visual 🖼️</h2>
-            <label for="imageUploadInput" class="input-file-style block text-center text-[#657153] mb-4">
-                Haz clic aquí para seleccionar una imagen
-            </label>
+            <div id="imageUploadDropArea" class="mb-4">
+                <p class="text-[#657153] pointer-events-none">Arrastra una imagen aquí o <label for="imageUploadInput" class="text-[#9e683b] underline cursor-pointer hover:text-[#c28f52]">selecciona un archivo</label>.</p>
+            </div>
             <input type="file" id="imageUploadInput" accept="image/*" class="hidden">
-
             <div id="imagePreviewContainer" class="text-center space-y-3">
                 <img id="uploadedImagePreview" src="#" alt="Imagen de referencia cargada" class="hidden mx-auto">
                 <p id="imageUploadPlaceholder" class="text-[#657153] italic">Sube una imagen para tenerla como referencia rápida.</p>
-                <div id="imageControls" class="hidden space-x-2">
+                <div id="imageControls" class="hidden space-x-2 mt-2">
                     <button id="enlargeImageButton" class="btn-control px-4 py-1.5 rounded-lg text-sm">Ampliar Imagen</button>
                     <button id="removeImageButton" class="btn-control px-4 py-1.5 rounded-lg text-sm bg-red-700 hover:bg-red-800">Quitar Imagen</button>
                 </div>
@@ -196,18 +203,39 @@
         <section id="soundtrackSection" class="bg-canvas p-6 rounded-xl soft-shadow artistic-border section-oil-effect">
             <h2 class="font-artistic text-2xl text-timer mb-4 text-center">Tu Banda Sonora 🎶</h2>
             <div class="space-y-3">
-                <input type="text" id="playlistLinkInput" placeholder="Pega enlace de playlist (Spotify o YouTube)" class="w-full p-3 rounded-lg input-style focus:outline-none focus:ring-2 focus:ring-[#9e683b]">
-                <button id="loadPlaylistButton" class="btn-active w-full py-2 px-4 rounded-lg font-semibold">Cargar Playlist</button>
+                <input type="text" id="playlistLinkInput" placeholder="Pega enlace de Spotify (playlist, álbum, canción)" class="w-full p-3 rounded-lg input-style focus:outline-none focus:ring-2 focus:ring-[#9e683b]">
+                <button id="loadPlaylistButton" class="btn-active w-full py-2 px-4 rounded-lg font-semibold">Cargar Música</button>
                 <div id="playlistMessagePlaceholder" class="h-6 mt-1"></div>
             </div>
-            <div id="playerHost" class="mt-6 min-h-[80px] md:min-h-[300px] player-wrapper"> <p id="playerDefaultPlaceholder" class="text-center text-[#657153] italic absolute inset-0 flex items-center justify-center">Activa la música y carga una playlist para empezar.</p>
-                 </div>
+            <div id="spotifyPlayerHost" class="mt-6 player-wrapper"> 
+                 <p id="playerDefaultPlaceholder" class="text-center text-[#657153] italic absolute inset-0 flex items-center justify-center">Activa la música y carga un enlace de Spotify para empezar.</p>
+            </div>
         </section>
 
+        <section id="ambientAudioVisualizerSection" class="bg-canvas p-6 rounded-xl soft-shadow artistic-border section-oil-effect text-center">
+            <h2 class="font-artistic text-2xl text-timer mb-2 text-center">Visualizador Ambiental 🎤</h2>
+            <p class="text-[#657153] mb-1 text-sm">Reacciona al audio del sistema/micrófono.</p>
+            <button id="toggleAmbientVisualizerButton" class="btn-visualizer-action">Activar Visualizador</button>
+            <canvas id="ambientAudioVisualizerCanvasVertical" class="mt-2"></canvas> 
+            <div class="warning text-xs text-red-700 mt-1" id="ambientAudioWarning">Pide permiso al micrófono o actívalo.</div>
+            <form id="youtubeSearchForm" target="_blank" class="youtube-search-form mt-3">
+                <input type="text" id="youtubeSearchInput" placeholder="Buscar en YouTube..." class="youtube-search-input">
+                <button type="submit" class="youtube-search-button">Buscar</button>
+            </form>
+        </section>
+        
+        <section id="todoSection" class="bg-canvas p-6 rounded-xl soft-shadow artistic-border section-oil-effect">
+            <h2 class="font-artistic text-2xl text-timer mb-4 text-center">Mis Tareas Pendientes 📝</h2>
+            <div class="todo-input-group">
+                <input type="text" id="todoInput" placeholder="Añadir nueva tarea..." class="input-style p-2 rounded-lg flex-grow">
+                <button id="addTodoButton" class="btn-active px-4 py-2 rounded-lg font-semibold">Añadir</button>
+            </div>
+            <ul id="todoList" class="mt-4 space-y-2">
+                </ul>
+        </section>
 
         <section id="aiSection" class="bg-canvas p-6 rounded-xl soft-shadow artistic-border section-oil-effect">
             <h2 class="font-artistic text-2xl text-timer mb-6 text-center">Sugerencias Inteligentes ✨</h2>
-            
             <div class="mb-4">
                 <label class="block text-sm font-medium text-[#657153] mb-1">Elige un modo:</label>
                 <div class="flex space-x-2">
@@ -215,17 +243,13 @@
                     <button id="aiModeCreativity" class="ai-mode-button flex-1 py-2 px-4 rounded-lg text-sm">Creatividad 🎨</button>
                 </div>
             </div>
-
             <div>
                 <label for="aiQuestionInput" class="block text-sm font-medium text-[#657153] mb-1">Escribe tu pregunta o idea:</label>
                 <textarea id="aiQuestionInput" rows="3" placeholder="Ej: ¿Cómo resuelvo esta ecuación? o ¿Qué colores combinan con el azul?" class="w-full p-3 rounded-lg input-style focus:outline-none focus:ring-2 focus:ring-[#9e683b]"></textarea>
             </div>
-
             <button id="getAiSuggestionButton" class="btn-active w-full py-2.5 px-4 rounded-lg font-semibold mt-4">Obtener Sugerencia</button>
-
-            <div id="aiResponseContainer" class="mt-6 p-4 rounded-lg min-h-[50px] hidden whitespace-pre-wrap">
-                </div>
-             <div id="aiLoadingIndicator" class="text-center text-[#657153] italic mt-4 hidden">Pensando... 🧠</div>
+            <div id="aiResponseContainer" class="mt-6 p-4 rounded-lg min-h-[50px] hidden whitespace-pre-wrap"></div>
+            <div id="aiLoadingIndicator" class="text-center text-[#657153] italic mt-4 hidden">Pensando... 🧠</div>
         </section>
     </main>
 
@@ -233,36 +257,15 @@
         <div class="modal-content p-6 md:p-8 rounded-xl soft-shadow w-full max-w-md section-oil-effect">
             <h3 class="font-artistic text-2xl text-timer mb-6 text-center">Configuración General</h3>
             <div class="space-y-4">
-                <div>
-                    <label for="workTimeInput" class="block text-sm font-medium text-[#657153] mb-1">Tiempo de Trabajo (minutos):</label>
-                    <input type="number" id="workTimeInput" value="25" min="1" class="w-full p-2 rounded-lg input-style">
-                </div>
-                <div>
-                    <label for="shortBreakInput" class="block text-sm font-medium text-[#657153] mb-1">Descanso Corto (minutos):</label>
-                    <input type="number" id="shortBreakInput" value="5" min="1" class="w-full p-2 rounded-lg input-style">
-                </div>
-                <div>
-                    <label for="longBreakInput" class="block text-sm font-medium text-[#657153] mb-1">Descanso Largo (minutos):</label>
-                    <input type="number" id="longBreakInput" value="15" min="1" class="w-full p-2 rounded-lg input-style">
-                </div>
-                <div>
-                    <label for="alarmSoundSelect" class="block text-sm font-medium text-[#657153] mb-1">Sonido de Alarma:</label>
-                    <select id="alarmSoundSelect" class="w-full p-2 rounded-lg input-style">
-                        <option value="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg">Reloj Despertador</option>
-                        <option value="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg">Reloj Digital</option>
-                        <option value="https://actions.google.com/sounds/v1/notifications/bell.ogg">Campana</option>
-                        <option value="https://actions.google.com/sounds/v1/notifications/harp_notification.ogg">Arpa Suave</option>
-                    </select>
-                </div>
+                <div><label for="workTimeInput" class="block text-sm font-medium text-[#657153] mb-1">Tiempo de Trabajo (minutos):</label><input type="number" id="workTimeInput" value="25" min="1" class="w-full p-2 rounded-lg input-style"></div>
+                <div><label for="shortBreakInput" class="block text-sm font-medium text-[#657153] mb-1">Descanso Corto (minutos):</label><input type="number" id="shortBreakInput" value="5" min="1" class="w-full p-2 rounded-lg input-style"></div>
+                <div><label for="longBreakInput" class="block text-sm font-medium text-[#657153] mb-1">Descanso Largo (minutos):</label><input type="number" id="longBreakInput" value="15" min="1" class="w-full p-2 rounded-lg input-style"></div>
+                <div><label for="alarmSoundSelect" class="block text-sm font-medium text-[#657153] mb-1">Sonido de Alarma:</label><select id="alarmSoundSelect" class="w-full p-2 rounded-lg input-style"><option value="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg">Reloj Despertador</option><option value="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg">Reloj Digital</option><option value="https://actions.google.com/sounds/v1/notifications/bell.ogg">Campana</option><option value="https://actions.google.com/sounds/v1/notifications/harp_notification.ogg">Arpa Suave</option></select></div>
             </div>
             <div id="settingsMessagePlaceholder" class="h-8 mt-3"></div>
-            <div class="mt-6 flex justify-end space-x-3">
-                <button id="cancelSettingsButton" class="btn-control px-4 py-2 rounded-lg">Cancelar</button>
-                <button id="saveSettingsButton" class="btn-active px-4 py-2 rounded-lg">Guardar</button>
-            </div>
+            <div class="mt-6 flex justify-end space-x-3"><button id="cancelSettingsButton" class="btn-control px-4 py-2 rounded-lg">Cancelar</button><button id="saveSettingsButton" class="btn-active px-4 py-2 rounded-lg">Guardar</button></div>
         </div>
     </div>
-
     <div id="sessionEndModal" class="fixed inset-0 modal-backdrop flex items-center justify-center p-4 hidden z-50">
         <div class="modal-content p-6 md:p-8 rounded-xl soft-shadow w-full max-w-sm text-center section-oil-effect">
             <h3 id="sessionEndTitle" class="font-artistic text-2xl text-timer mb-4">¡Sesión Terminada!</h3>
@@ -270,138 +273,103 @@
             <button id="proceedNextPhaseButton" class="btn-active w-full py-2.5 px-4 rounded-lg font-semibold">Comenzar</button>
         </div>
     </div>
-
     <div id="imageModal" class="fixed inset-0 modal-backdrop flex items-center justify-center p-4 hidden">
-        <div class="relative">
-            <img id="enlargedImageView" src="#" alt="Imagen de referencia ampliada">
-            <button id="closeImageModalButton" title="Cerrar imagen">×</button>
-        </div>
+        <div class="relative"><img id="enlargedImageView" src="#" alt="Imagen de referencia ampliada"><button id="closeImageModalButton" title="Cerrar imagen">×</button></div>
     </div>
-    
     <audio id="notificationSound" preload="auto"></audio>
 
     <script>
         // --- DOM Elements ---
-        const timeDisplay = document.getElementById('timeDisplay');
-        const timerProgress = document.getElementById('timerProgress');
-        const startButton = document.getElementById('startButton');
-        const pauseButton = document.getElementById('pauseButton');
-        const resetButton = document.getElementById('resetButton');
-        const settingsButton = document.getElementById('settingsButton');
-        const currentModeDisplay = document.getElementById('currentModeDisplay');
+        const timeDisplay = document.getElementById('timeDisplay'), timerProgress = document.getElementById('timerProgress');
+        const startButton = document.getElementById('startButton'), pauseButton = document.getElementById('pauseButton'), resetButton = document.getElementById('resetButton');
+        const settingsButton = document.getElementById('settingsButton'), currentModeDisplay = document.getElementById('currentModeDisplay');
         const notificationSound = document.getElementById('notificationSound');
-        const musicToggleButton = document.getElementById('musicToggleButton');
-        const musicToggleText = document.getElementById('musicToggleText');
-        const musicIcon = document.getElementById('musicIcon');
-        // Soundtrack Section
-        const playlistLinkInput = document.getElementById('playlistLinkInput');
-        const loadPlaylistButton = document.getElementById('loadPlaylistButton');
-        const playerHost = document.getElementById('playerHost'); // Nuevo contenedor general
+        const musicToggleButton = document.getElementById('musicToggleButton'), musicToggleText = document.getElementById('musicToggleText'), musicIcon = document.getElementById('musicIcon');
+        const playlistLinkInput = document.getElementById('playlistLinkInput'), loadPlaylistButton = document.getElementById('loadPlaylistButton');
+        const spotifyPlayerHost = document.getElementById('spotifyPlayerHost'); 
         const playerDefaultPlaceholder = document.getElementById('playerDefaultPlaceholder');
         const playlistMessagePlaceholder = document.getElementById('playlistMessagePlaceholder');
-        // Settings Modal
-        const settingsModal = document.getElementById('settingsModal');
-        const workTimeInput = document.getElementById('workTimeInput');
-        const shortBreakInput = document.getElementById('shortBreakInput');
-        const longBreakInput = document.getElementById('longBreakInput');
-        const alarmSoundSelect = document.getElementById('alarmSoundSelect');
-        const saveSettingsButton = document.getElementById('saveSettingsButton');
-        const cancelSettingsButton = document.getElementById('cancelSettingsButton');
-        const settingsMessagePlaceholder = document.getElementById('settingsMessagePlaceholder');
-        // Session End Modal
-        const sessionEndModal = document.getElementById('sessionEndModal');
-        const sessionEndTitle = document.getElementById('sessionEndTitle');
-        const sessionEndMessage = document.getElementById('sessionEndMessage');
-        const proceedNextPhaseButton = document.getElementById('proceedNextPhaseButton');
-        // AI Section
-        const aiModeStudyButton = document.getElementById('aiModeStudy');
-        const aiModeCreativityButton = document.getElementById('aiModeCreativity');
-        const aiQuestionInput = document.getElementById('aiQuestionInput');
-        const getAiSuggestionButton = document.getElementById('getAiSuggestionButton');
-        const aiResponseContainer = document.getElementById('aiResponseContainer');
-        const aiLoadingIndicator = document.getElementById('aiLoadingIndicator');
+        const settingsModal = document.getElementById('settingsModal'), workTimeInput = document.getElementById('workTimeInput');
+        const shortBreakInput = document.getElementById('shortBreakInput'), longBreakInput = document.getElementById('longBreakInput');
+        const alarmSoundSelect = document.getElementById('alarmSoundSelect'), saveSettingsButton = document.getElementById('saveSettingsButton');
+        const cancelSettingsButton = document.getElementById('cancelSettingsButton'), settingsMessagePlaceholder = document.getElementById('settingsMessagePlaceholder');
+        const sessionEndModal = document.getElementById('sessionEndModal'), sessionEndTitle = document.getElementById('sessionEndTitle');
+        const sessionEndMessage = document.getElementById('sessionEndMessage'), proceedNextPhaseButton = document.getElementById('proceedNextPhaseButton');
+        const aiModeStudyButton = document.getElementById('aiModeStudy'), aiModeCreativityButton = document.getElementById('aiModeCreativity');
+        const aiQuestionInput = document.getElementById('aiQuestionInput'), getAiSuggestionButton = document.getElementById('getAiSuggestionButton');
+        const aiResponseContainer = document.getElementById('aiResponseContainer'), aiLoadingIndicator = document.getElementById('aiLoadingIndicator');
         // Image Reference Section
-        const imageUploadInput = document.getElementById('imageUploadInput');
-        const uploadedImagePreview = document.getElementById('uploadedImagePreview');
-        const imageUploadPlaceholder = document.getElementById('imageUploadPlaceholder');
-        const imageControls = document.getElementById('imageControls');
-        const enlargeImageButton = document.getElementById('enlargeImageButton');
-        const removeImageButton = document.getElementById('removeImageButton');
-        const imageModal = document.getElementById('imageModal');
-        const enlargedImageView = document.getElementById('enlargedImageView');
-        const closeImageModalButton = document.getElementById('closeImageModalButton');
+        const imageUploadDropArea = document.getElementById('imageUploadDropArea');
+        const imageUploadInput = document.getElementById('imageUploadInput'), uploadedImagePreview = document.getElementById('uploadedImagePreview');
+        const imageUploadPlaceholder = document.getElementById('imageUploadPlaceholder'), imageControls = document.getElementById('imageControls');
+        const enlargeImageButton = document.getElementById('enlargeImageButton'), removeImageButton = document.getElementById('removeImageButton');
+        const imageModal = document.getElementById('imageModal'), enlargedImageView = document.getElementById('enlargedImageView'), closeImageModalButton = document.getElementById('closeImageModalButton');
+        // Ambient Audio Visualizer Section
+        const ambientCanvasVertical = document.getElementById("ambientAudioVisualizerCanvasVertical");
+        const ambientAudioWarning = document.getElementById("ambientAudioWarning");
+        const toggleAmbientVisualizerButton = document.getElementById("toggleAmbientVisualizerButton");
+        const youtubeSearchForm = document.getElementById("youtubeSearchForm"); // Re-added
+        const youtubeSearchInput = document.getElementById("youtubeSearchInput"); // Re-added
+        // To-Do List Section
+        const todoInput = document.getElementById('todoInput');
+        const addTodoButton = document.getElementById('addTodoButton');
+        const todoList = document.getElementById('todoList');
+
 
         // --- App State & Config ---
         let workTime = 25 * 60, shortBreakTime = 5 * 60, longBreakTime = 15 * 60;
         let selectedAlarmSound = 'https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg';
         let currentTime = workTime, timerInterval, isPaused = false, currentMode = 'work', pomodoroCount = 0;
         let musicEnabled = false;
-        let activePlayer = null; // 'spotify' o 'youtube'
-        let activePlayerIframe = null; // Referencia al iframe del reproductor activo
+        let spotifyPlayerIframe = null; 
         let currentAiMode = 'study';
         const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * 45;
 
+        // Ambient Audio Visualizer State
+        let ambientAudioCtx, ambientAnalyser, ambientBufferLength, ambientDataArray;
+        let ambientAnimationId = null;
+        let isAmbientVisualizerActive = false;
+        let mediaStreamSource = null;
+
+
         // --- Utility Functions ---
         function showTemporaryMessage(element, message, type = 'error', duration = 3000) {
-            element.textContent = message;
-            element.className = `temporary-message message-${type}`; 
+            element.textContent = message; element.className = `temporary-message message-${type}`; 
             setTimeout(() => { element.textContent = ''; element.className = ''; }, duration);
         }
         
-        // --- Timer Logic ---
+        // --- Timer Logic (sin cambios) ---
         function updateDisplay() {
-            const minutes = Math.floor(currentTime / 60);
-            const seconds = currentTime % 60;
+            const minutes = Math.floor(currentTime / 60), seconds = currentTime % 60;
             timeDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
             let totalDuration = currentMode === 'work' ? workTime : (currentMode === 'shortBreak' ? shortBreakTime : longBreakTime);
             const progress = totalDuration > 0 ? ((totalDuration - currentTime) / totalDuration) * CIRCLE_CIRCUMFERENCE : 0;
             timerProgress.style.strokeDashoffset = progress;
         }
-
         function startTimer() {
             if (timerInterval) clearInterval(timerInterval);
             isPaused = false;
-            startButton.classList.add('hidden');
-            pauseButton.classList.remove('hidden');
+            startButton.classList.add('hidden'); pauseButton.classList.remove('hidden');
             updateCurrentModeDisplay();
-            if (musicEnabled && activePlayerIframe && currentMode === 'work') sendPlayerCommand('play');
-
+            if (musicEnabled && spotifyPlayerIframe && currentMode === 'work') sendSpotifyCommand('play');
             timerInterval = setInterval(() => {
-                if (!isPaused && currentTime > 0) {
-                    currentTime--;
-                    updateDisplay();
-                } else if (currentTime === 0) {
-                    clearInterval(timerInterval);
-                    handleSessionEnd();
-                }
+                if (!isPaused && currentTime > 0) { currentTime--; updateDisplay(); } 
+                else if (currentTime === 0) { clearInterval(timerInterval); handleSessionEnd(); }
             }, 1000);
         }
-
         function pauseTimer() {
-            isPaused = true;
-            clearInterval(timerInterval);
-            pauseButton.classList.add('hidden');
-            startButton.classList.remove('hidden');
-            startButton.textContent = 'Reanudar';
-            if (musicEnabled && activePlayerIframe) sendPlayerCommand('pause');
+            isPaused = true; clearInterval(timerInterval);
+            pauseButton.classList.add('hidden'); startButton.classList.remove('hidden'); startButton.textContent = 'Reanudar';
+            if (musicEnabled && spotifyPlayerIframe) sendSpotifyCommand('pause');
         }
-
         function resetTimer(mode = 'work', manualReset = true) {
-            clearInterval(timerInterval);
-            isPaused = false;
-            currentMode = mode;
+            clearInterval(timerInterval); isPaused = false; currentMode = mode;
             if (manualReset) pomodoroCount = 0;
             currentTime = mode === 'work' ? workTime : (mode === 'shortBreak' ? shortBreakTime : longBreakTime);
-            updateDisplay();
-            updateCurrentModeDisplay();
-            startButton.classList.remove('hidden');
-            pauseButton.classList.add('hidden');
-            startButton.textContent = 'Iniciar';
-            if (musicEnabled && activePlayerIframe) {
-                 sendPlayerCommand(currentMode === 'work' ? 'play' : 'pause');
-            }
+            updateDisplay(); updateCurrentModeDisplay();
+            startButton.classList.remove('hidden'); pauseButton.classList.add('hidden'); startButton.textContent = 'Iniciar';
+            if (musicEnabled && spotifyPlayerIframe) sendSpotifyCommand(currentMode === 'work' ? 'play' : 'pause');
         }
-        
         function updateCurrentModeDisplay() {
             let modeText = '';
             switch(currentMode) {
@@ -411,7 +379,6 @@
             }
             currentModeDisplay.textContent = modeText;
         }
-
         function handleSessionEnd() {
             playNotificationSound();
             let title = '', message = '', buttonText = '';
@@ -421,172 +388,110 @@
                 buttonText = pomodoroCount % 4 === 0 ? 'Iniciar Descanso Largo' : 'Iniciar Descanso Corto';
             } else {
                 title = currentMode === 'shortBreak' ? '¡Descanso Corto Finalizado!' : '¡Descanso Largo Finalizado!';
-                message = '¿Listo para la siguiente fase?';
-                buttonText = 'Iniciar Trabajo';
+                message = '¿Listo para la siguiente fase?'; buttonText = 'Iniciar Trabajo';
             }
-            sessionEndTitle.textContent = title;
-            sessionEndMessage.textContent = message;
-            proceedNextPhaseButton.textContent = buttonText;
-            sessionEndModal.classList.remove('hidden');
+            sessionEndTitle.textContent = title; sessionEndMessage.textContent = message;
+            proceedNextPhaseButton.textContent = buttonText; sessionEndModal.classList.remove('hidden');
         }
-        
         proceedNextPhaseButton.addEventListener('click', () => {
-            sessionEndModal.classList.add('hidden');
-            switchToNextMode();
+            sessionEndModal.classList.add('hidden'); switchToNextMode();
         });
-
         function switchToNextMode() {
-            if (currentMode === 'work') {
-                currentMode = pomodoroCount % 4 === 0 ? 'longBreak' : 'shortBreak';
-            } else { 
-                currentMode = 'work';
-            }
-            resetTimer(currentMode, false); 
-            startTimer(); 
+            currentMode = currentMode === 'work' ? (pomodoroCount % 4 === 0 ? 'longBreak' : 'shortBreak') : 'work';
+            resetTimer(currentMode, false); startTimer(); 
         }
-
         function playNotificationSound() {
-            notificationSound.src = selectedAlarmSound;
-            notificationSound.currentTime = 0; 
+            notificationSound.src = selectedAlarmSound; notificationSound.currentTime = 0; 
             notificationSound.play().catch(error => console.warn("Error al reproducir sonido:", error));
         }
 
-        // --- Settings Logic ---
+        // --- Settings Logic (sin cambios) ---
         settingsButton.addEventListener('click', () => {
-            workTimeInput.value = workTime / 60;
-            shortBreakInput.value = shortBreakTime / 60;
-            longBreakInput.value = longBreakTime / 60;
-            alarmSoundSelect.value = selectedAlarmSound;
+            workTimeInput.value = workTime / 60; shortBreakInput.value = shortBreakTime / 60;
+            longBreakInput.value = longBreakTime / 60; alarmSoundSelect.value = selectedAlarmSound;
             settingsModal.classList.remove('hidden');
         });
         cancelSettingsButton.addEventListener('click', () => {
-            settingsModal.classList.add('hidden');
-            settingsMessagePlaceholder.textContent = ''; 
+            settingsModal.classList.add('hidden'); settingsMessagePlaceholder.textContent = ''; 
         });
         saveSettingsButton.addEventListener('click', () => {
             const newWorkTime = parseInt(workTimeInput.value), newShortBreak = parseInt(shortBreakInput.value), newLongBreak = parseInt(longBreakInput.value);
             if (newWorkTime > 0 && newShortBreak > 0 && newLongBreak > 0) {
                 workTime = newWorkTime * 60; shortBreakTime = newShortBreak * 60; longBreakTime = newLongBreak * 60;
                 selectedAlarmSound = alarmSoundSelect.value;
-                settingsModal.classList.add('hidden');
-                resetTimer(currentMode, false); 
+                settingsModal.classList.add('hidden'); resetTimer(currentMode, false); 
                 showTemporaryMessage(settingsMessagePlaceholder, 'Configuración guardada.', 'success');
             } else {
                 showTemporaryMessage(settingsMessagePlaceholder, 'Valores de tiempo no válidos.', 'error');
             }
         });
 
-        // --- Soundtrack Logic (Spotify & YouTube) ---
+        // --- Soundtrack Logic (Spotify Compacto) ---
         musicToggleButton.addEventListener('click', () => {
             musicEnabled = !musicEnabled;
             musicToggleText.textContent = musicEnabled ? 'Desactivar Música' : 'Activar Música';
             if (musicEnabled) {
                 musicIcon.innerHTML = `<path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle><line x1="9" y1="8" x2="18" y2="6"></line>`;
-                if (activePlayerIframe && currentMode === 'work' && !isPaused) sendPlayerCommand('play');
-                playerDefaultPlaceholder.classList.toggle('hidden', !!activePlayerIframe);
+                if (spotifyPlayerIframe && currentMode === 'work' && !isPaused) sendSpotifyCommand('play');
+                playerDefaultPlaceholder.classList.toggle('hidden', !!spotifyPlayerIframe);
             } else {
                 musicIcon.innerHTML = `<path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle><line x1="1" y1="1" x2="23" y2="23"></line>`;
-                if (activePlayerIframe) sendPlayerCommand('pause');
-                playerDefaultPlaceholder.classList.remove('hidden');
+                if (spotifyPlayerIframe) sendSpotifyCommand('pause');
+                if (!spotifyPlayerIframe) playerDefaultPlaceholder.classList.remove('hidden');
             }
         });
-
         loadPlaylistButton.addEventListener('click', () => {
             const link = playlistLinkInput.value.trim();
             if (!link) {
-                showTemporaryMessage(playlistMessagePlaceholder, 'Por favor, pega un enlace de playlist.', 'error');
-                return;
+                showTemporaryMessage(playlistMessagePlaceholder, 'Por favor, pega un enlace de Spotify.', 'error'); return;
             }
-            
-            playerHost.innerHTML = ''; // Limpiar reproductor anterior
-            playerDefaultPlaceholder.classList.add('hidden');
-            activePlayerIframe = null;
-            activePlayer = null;
+            spotifyPlayerHost.innerHTML = ''; 
+            playerDefaultPlaceholder.classList.add('hidden'); 
+            spotifyPlayerIframe = null;
 
-            // Intenta detectar Spotify
-            const spotifyRegex = /https?:\/\/open\.spotify\.com\/(playlist|track|album)\/([a-zA-Z0-9]+)/;
+            const spotifyRegex = /https?:\/\/open\.spotify\.com\/(playlist|track|album|artist)\/([a-zA-Z0-9]+)/;
             const spotifyMatch = link.match(spotifyRegex);
+
             if (spotifyMatch && spotifyMatch[1] && spotifyMatch[2]) {
                 const type = spotifyMatch[1];
                 const id = spotifyMatch[2];
-                const embedUrl = `https://open.spotify.com/embed/${type}/${id}`;
+                const embedUrl = `https://open.spotify.com/embed/${type}/${id}?utm_source=generator&theme=0`; 
+                spotifyPlayerHost.className = `mt-6 player-wrapper`; 
                 loadSpotifyPlayer(embedUrl);
                 playlistLinkInput.value = '';
-                return;
+            } else {
+                showTemporaryMessage(playlistMessagePlaceholder, 'Enlace de Spotify no reconocido o no válido.', 'error', 4000);
+                spotifyPlayerHost.innerHTML = ''; 
+                const newPlaceholder = playerDefaultPlaceholder.cloneNode(true);
+                spotifyPlayerHost.appendChild(newPlaceholder);
+                newPlaceholder.classList.remove('hidden');
             }
-
-            // Intenta detectar YouTube Playlist
-            const youtubePlaylistRegex = /(?:https?:\/\/)?(?:www\.)?youtube\.com\/playlist\?list=([a-zA-Z0-9_-]+)/;
-            const youtubePlaylistMatch = link.match(youtubePlaylistRegex);
-            if (youtubePlaylistMatch && youtubePlaylistMatch[1]) {
-                const playlistId = youtubePlaylistMatch[1];
-                const embedUrl = `https://www.youtube.com/embed/videoseries?list=${playlistId}&autoplay=1`; // Autoplay para YouTube
-                loadYouTubePlayer(embedUrl);
-                playlistLinkInput.value = '';
-                return;
-            }
-            
-            // Si no es ninguno de los dos
-            showTemporaryMessage(playlistMessagePlaceholder, 'Enlace no reconocido (Spotify o YouTube Playlist).', 'error', 4000);
-            playerDefaultPlaceholder.classList.remove('hidden');
         });
-
-        function createPlayerIframe(src, allow) {
-            const iframe = document.createElement('iframe');
-            iframe.style.borderRadius = "12px";
-            iframe.src = src;
-            iframe.frameBorder = "0";
-            iframe.allowFullscreen = true;
-            iframe.allow = allow;
-            iframe.loading = "lazy";
-            playerHost.appendChild(iframe);
-            return iframe;
-        }
-
         function loadSpotifyPlayer(embedUrl) {
-            activePlayerIframe = createPlayerIframe(embedUrl, "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture");
-            activePlayer = 'spotify';
-            activePlayerIframe.onload = () => {
-                if (musicEnabled && currentMode === 'work' && !isPaused) sendPlayerCommand('play');
+            spotifyPlayerIframe = document.createElement('iframe');
+            spotifyPlayerIframe.src = embedUrl;
+            spotifyPlayerIframe.width="100%"; 
+            spotifyPlayerIframe.height="80"; 
+            spotifyPlayerIframe.frameBorder="0";
+            spotifyPlayerIframe.allowFullscreen="";
+            spotifyPlayerIframe.allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture";
+            spotifyPlayerIframe.loading="lazy";
+            spotifyPlayerHost.appendChild(spotifyPlayerIframe); 
+            spotifyPlayerIframe.onload = () => {
+                if (musicEnabled && currentMode === 'work' && !isPaused) sendSpotifyCommand('play');
             };
-            showTemporaryMessage(playlistMessagePlaceholder, 'Playlist de Spotify cargada.', 'success');
+            showTemporaryMessage(playlistMessagePlaceholder, 'Música de Spotify cargada.', 'success');
+        }
+        function sendSpotifyCommand(command) {
+            if (!spotifyPlayerIframe || !spotifyPlayerIframe.contentWindow) return;
+            const message = JSON.stringify({ command: command });
+            spotifyPlayerIframe.contentWindow.postMessage(message, 'https://open.spotify.com/embed/');
         }
 
-        function loadYouTubePlayer(embedUrl) {
-            activePlayerIframe = createPlayerIframe(embedUrl, "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
-            activePlayer = 'youtube';
-            // YouTube autoplay está en la URL, no necesita postMessage inicial si la música está activa.
-            // Si la música no está activa, no debería sonar.
-            if (!musicEnabled || (currentMode !== 'work' && !isPaused) ) {
-                // Para evitar autoplay si no debe, podríamos recargar el iframe sin autoplay o enviar 'pause'
-                // Pero es más complejo. Por ahora, el autoplay en la URL es más simple.
-            }
-            showTemporaryMessage(playlistMessagePlaceholder, 'Playlist de YouTube cargada.', 'success');
-        }
-        
-        function sendPlayerCommand(command) {
-            if (!activePlayerIframe || !activePlayerIframe.contentWindow) return;
-            
-            let message;
-            if (activePlayer === 'spotify') {
-                message = JSON.stringify({ command: command }); // Spotify usa JSON string
-                activePlayerIframe.contentWindow.postMessage(message, 'https://open.spotify.com/embed/');
-            } else if (activePlayer === 'youtube') {
-                // YouTube player API usa una estructura diferente para postMessage
-                let func = command === 'play' ? 'playVideo' : (command === 'pause' ? 'pauseVideo' : null);
-                if (func) {
-                    message = JSON.stringify({
-                        event: 'command',
-                        func: func,
-                        args: ''
-                    });
-                    activePlayerIframe.contentWindow.postMessage(message, 'https://www.youtube.com');
-                }
-            }
-        }
-
-
-        // --- AI Logic ---
+        // --- AI Logic (sin cambios) ---
+        aiModeStudyButton.addEventListener('click', () => { /* ... */ });
+        aiModeCreativityButton.addEventListener('click', () => { /* ... */ });
+        getAiSuggestionButton.addEventListener('click', async () => { /* ... */ });
         aiModeStudyButton.addEventListener('click', () => {
             currentAiMode = 'study';
             aiModeStudyButton.classList.add('active');
@@ -642,9 +547,8 @@
             }
         });
 
-        // --- Visual Reference Logic ---
-        imageUploadInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
+        // --- Visual Reference Logic con Drag & Drop ---
+        function handleImageFile(file) {
             if (file && file.type.startsWith('image/')) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
@@ -655,28 +559,199 @@
                 }
                 reader.readAsDataURL(file);
             } else {
-                showTemporaryMessage(imageUploadPlaceholder.parentElement, "Por favor, selecciona un archivo de imagen.", 'error');
-                removeUploadedImage();
+                showTemporaryMessage(imageUploadDropArea, "Por favor, selecciona o arrastra un archivo de imagen.", 'error');
+                removeUploadedImageFull();
+            }
+        }
+        imageUploadInput.addEventListener('change', function(event) {
+            handleImageFile(event.target.files[0]);
+        });
+        imageUploadDropArea.addEventListener('click', () => imageUploadInput.click()); 
+        imageUploadDropArea.addEventListener('dragover', (event) => {
+            event.preventDefault(); 
+            imageUploadDropArea.classList.add('dragover');
+        });
+        imageUploadDropArea.addEventListener('dragleave', () => {
+            imageUploadDropArea.classList.remove('dragover');
+        });
+        imageUploadDropArea.addEventListener('drop', (event) => {
+            event.preventDefault();
+            imageUploadDropArea.classList.remove('dragover');
+            if (event.dataTransfer.items) {
+                if (event.dataTransfer.items[0].kind === 'file') {
+                    const file = event.dataTransfer.items[0].getAsFile();
+                    handleImageFile(file);
+                }
+            } else { 
+                const file = event.dataTransfer.files[0];
+                handleImageFile(file);
             }
         });
-        enlargeImageButton.addEventListener('click', function() {
+        enlargeImageButton.addEventListener('click', function() { 
             if (uploadedImagePreview.src && uploadedImagePreview.src !== '#') {
                 enlargedImageView.src = uploadedImagePreview.src;
                 imageModal.classList.remove('hidden');
             }
         });
-        closeImageModalButton.addEventListener('click', function() {
+        closeImageModalButton.addEventListener('click', function() { 
             imageModal.classList.add('hidden');
             enlargedImageView.src = '#';
         });
-        removeImageButton.addEventListener('click', removeUploadedImage);
-        function removeUploadedImage() {
+        removeImageButton.addEventListener('click', removeUploadedImageFull); 
+        function removeUploadedImageFull() { 
             uploadedImagePreview.src = '#';
             uploadedImagePreview.classList.add('hidden');
             imageUploadPlaceholder.classList.remove('hidden');
             imageControls.classList.add('hidden');
             imageUploadInput.value = null;
         }
+
+
+        // --- Ambient Audio Visualizer Logic (Vertical) ---
+        if (ambientCanvasVertical && ambientAudioWarning && toggleAmbientVisualizerButton) {
+            const ambientCtxVertical = ambientCanvasVertical.getContext("2d");
+
+            async function startAmbientVisualizationVertical() {
+                if (isAmbientVisualizerActive) return;
+                try {
+                    if (ambientAudioCtx && ambientAudioCtx.state === 'suspended') { await ambientAudioCtx.resume(); }
+                    else if (!ambientAudioCtx || ambientAudioCtx.state === 'closed') { ambientAudioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+                    
+                    ambientAnalyser = ambientAudioCtx.createAnalyser();
+                    ambientAnalyser.fftSize = 128; 
+                    ambientBufferLength = ambientAnalyser.frequencyBinCount; 
+                    ambientDataArray = new Uint8Array(ambientBufferLength);
+
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+                    mediaStreamSource = ambientAudioCtx.createMediaStreamSource(stream);
+                    mediaStreamSource.connect(ambientAnalyser);
+                    
+                    ambientAudioWarning.textContent = 'Visualizador activo. Escuchando...';
+                    ambientAudioWarning.className = 'warning text-xs text-green-700 mt-1';
+                    isAmbientVisualizerActive = true;
+                    toggleAmbientVisualizerButton.textContent = "Desactivar Visualizador";
+                    if (ambientAnimationId) cancelAnimationFrame(ambientAnimationId);
+                    drawAmbientVisualizerVertical();
+                } catch (err) {
+                    ambientAudioWarning.textContent = 'Error al acceder al micrófono. Revisa los permisos.';
+                    ambientAudioWarning.className = 'warning text-xs text-red-700 mt-1';
+                    console.error('Error accediendo al micrófono:', err);
+                    isAmbientVisualizerActive = false;
+                    toggleAmbientVisualizerButton.textContent = "Activar Visualizador";
+                    if(ambientCtxVertical) ambientCtxVertical.clearRect(0, 0, ambientCanvasVertical.width, ambientCanvasVertical.height);
+                }
+            }
+
+            function stopAmbientVisualizationVertical() {
+                if (!isAmbientVisualizerActive) return;
+                if (ambientAnimationId) { cancelAnimationFrame(ambientAnimationId); ambientAnimationId = null; }
+                if (mediaStreamSource) {
+                    mediaStreamSource.disconnect();
+                    mediaStreamSource.mediaStream.getTracks().forEach(track => track.stop());
+                    mediaStreamSource = null;
+                }
+                ambientAudioWarning.textContent = 'Visualizador desactivado.';
+                ambientAudioWarning.className = 'warning text-xs text-[#8c6f56] mt-1';
+                isAmbientVisualizerActive = false;
+                toggleAmbientVisualizerButton.textContent = "Activar Visualizador";
+                if(ambientCtxVertical) ambientCtxVertical.clearRect(0, 0, ambientCanvasVertical.width, ambientCanvasVertical.height);
+            }
+
+            toggleAmbientVisualizerButton.addEventListener('click', () => {
+                if (isAmbientVisualizerActive) stopAmbientVisualizationVertical();
+                else startAmbientVisualizationVertical();
+            });
+
+            function drawAmbientVisualizerVertical() {
+                if (!isAmbientVisualizerActive || !ambientAnalyser || !ambientAudioCtx || ambientAudioCtx.state === 'closed') {
+                    if (ambientAnimationId) { cancelAnimationFrame(ambientAnimationId); ambientAnimationId = null; }
+                    return;
+                }
+                ambientAnimationId = requestAnimationFrame(drawAmbientVisualizerVertical);
+                ambientAnalyser.getByteFrequencyData(ambientDataArray);
+
+                const canvasWidth = ambientCanvasVertical.width;
+                const canvasHeight = ambientCanvasVertical.height;
+                ambientCtxVertical.clearRect(0, 0, canvasWidth, canvasHeight);
+
+                const barWidth = canvasWidth / ambientBufferLength; 
+                let x = 0;
+
+                for (let i = 0; i < ambientBufferLength; i++) {
+                    const barHeight = (ambientDataArray[i] / 255) * canvasHeight; 
+
+                    const gradient = ambientCtxVertical.createLinearGradient(x, canvasHeight, x, canvasHeight - barHeight);
+                    gradient.addColorStop(0, `rgba(100, 180, 255, 0.6)`); 
+                    gradient.addColorStop(0.5, `rgba(80, 220, 180, 0.7)`); 
+                    gradient.addColorStop(1, `rgba(120, 255, 220, 0.8)`); 
+                    ambientCtxVertical.fillStyle = gradient;
+
+                    ambientCtxVertical.fillRect(x, canvasHeight - barHeight, barWidth -1 , barHeight); 
+                    x += barWidth;
+                }
+            }
+            // Re-added YouTube Search Form Logic
+            if (youtubeSearchForm) {
+                youtubeSearchForm.addEventListener("submit", function (e) {
+                    e.preventDefault();
+                    const query = youtubeSearchInput.value.trim();
+                    if (query) {
+                        const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
+                        window.open(url, '_blank');
+                    }
+                });
+            }
+        }
+        
+        // --- To-Do List Logic ---
+        if (addTodoButton && todoInput && todoList) {
+            addTodoButton.addEventListener('click', addTodo);
+            todoInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    addTodo();
+                }
+            });
+
+            function addTodo() {
+                const taskText = todoInput.value.trim();
+                if (taskText === '') {
+                    showTemporaryMessage(todoList.parentElement, "La tarea no puede estar vacía.", 'error', 2000);
+                    return;
+                }
+
+                const listItem = document.createElement('li');
+                listItem.className = 'todo-item flex items-center justify-between p-3 bg-[#fbf3eb] border border-[#e0d8d0] rounded-md cursor-pointer hover:bg-[#f5e9dd]';
+                
+                const taskSpan = document.createElement('span');
+                taskSpan.textContent = taskText;
+                taskSpan.className = "flex-grow";
+
+                const deleteButton = document.createElement('button');
+                deleteButton.innerHTML = '×'; 
+                deleteButton.className = 'delete-todo text-[#c28f52] hover:text-[#9e683b] text-xl font-bold ml-2';
+                deleteButton.title = "Eliminar tarea";
+
+                listItem.appendChild(taskSpan);
+                listItem.appendChild(deleteButton);
+                todoList.appendChild(listItem);
+
+                listItem.addEventListener('click', function(e) {
+                    if (e.target !== deleteButton && !deleteButton.contains(e.target)) { 
+                        listItem.classList.toggle('completed');
+                        taskSpan.classList.toggle('line-through');
+                        taskSpan.classList.toggle('text-[#8c6f56]');
+                    }
+                });
+
+                deleteButton.addEventListener('click', function(e) {
+                    e.stopPropagation(); 
+                    todoList.removeChild(listItem);
+                });
+
+                todoInput.value = ''; 
+            }
+        }
+
 
         // --- App Initialization ---
         function initializeApp() {
@@ -686,12 +761,30 @@
             updateDisplay();
             updateCurrentModeDisplay();
             aiModeStudyButton.click(); 
-            // Asegurar que el playerHost esté limpio al inicio y se vea el placeholder
-            playerHost.innerHTML = ''; // Limpiar cualquier iframe persistente
-            playerHost.appendChild(playerDefaultPlaceholder); // Añadir el placeholder
-            playerDefaultPlaceholder.classList.remove('hidden');
+            
+            spotifyPlayerHost.innerHTML = ''; 
+            const newPlaceholder = playerDefaultPlaceholder.cloneNode(true); 
+            spotifyPlayerHost.appendChild(newPlaceholder); 
+            newPlaceholder.classList.remove('hidden');
 
+            if(ambientAudioWarning) ambientAudioWarning.textContent = 'Visualizador desactivado. Haz clic en "Activar Visualizador".';
+            if (ambientCanvasVertical) {
+                ambientCanvasVertical.width = ambientCanvasVertical.offsetWidth;
+                ambientCanvasVertical.height = 150; 
+            }
         }
+        
+        window.addEventListener('resize', () => {
+            if (ambientCanvasVertical && isAmbientVisualizerActive) { // Solo reajustar si está activo para evitar errores
+                ambientCanvasVertical.width = ambientCanvasVertical.offsetWidth;
+                // Si el visualizador está activo y se redimensiona, podrías querer redibujar una vez
+                // o simplemente dejar que el siguiente frame de animación lo corrija.
+                // Por simplicidad, el siguiente frame lo corregirá.
+            } else if (ambientCanvasVertical) { // Asegurar que tenga dimensiones incluso si no está activo
+                 ambientCanvasVertical.width = ambientCanvasVertical.offsetWidth;
+            }
+        });
+
         initializeApp();
     </script>
 </body>
