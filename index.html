@@ -25,17 +25,51 @@
         .btn-control:hover { background-color: #8aa073; }
         .input-style { border: 1px solid #9e683b; background-color: #fff; color: #3b3b3b; }
         .input-style::placeholder { color: #9e683b; opacity: 0.7; }
+        .input-file-style {
+            border: 2px dashed #9e683b;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .input-file-style:hover {
+            background-color: #fbf3eb;
+        }
         .timer-circle-bg { stroke: #e0d8d0; }
         .timer-circle-progress { stroke: #9e683b; stroke-linecap: round; transform-origin: 50% 50%; transform: rotate(-90deg); transition: stroke-dashoffset 1s linear; }
         .soft-shadow { box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); }
         .artistic-border { border: 1px solid transparent; box-shadow: 0 0 0 1px #d1c5b8, 0 0 10px 2px rgba(158, 104, 59, 0.1); }
-        .modal-backdrop { background-color: rgba(59, 59, 59, 0.5); }
+        .modal-backdrop { background-color: rgba(59, 59, 59, 0.7); }
         .modal-content { background-color: #fdf6f0; }
         .section-oil-effect { position: relative; padding: 2rem; border-radius: 12px; }
         .section-oil-effect::before, .section-oil-effect::after { content: ''; position: absolute; border-radius: 12px; opacity: 0.15; pointer-events: none; }
         .section-oil-effect::before { top: -5px; left: 2%; width: 96%; height: 15px; background: linear-gradient(to bottom, rgba(158, 104, 59, 0.3), transparent); filter: blur(3px); }
         .section-oil-effect::after { bottom: -5px; left: 2%; width: 96%; height: 15px; background: linear-gradient(to top, rgba(158, 104, 59, 0.3), transparent); filter: blur(3px); }
-        #spotifyPlayerContainer iframe { border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+        
+        .player-container iframe { 
+            border-radius: 12px; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            width: 100%;
+            height: 100%;
+        }
+        .player-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #f0f0f0; /* Placeholder background */
+            border-radius: 12px;
+        }
+        .player-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+
         .temporary-message {
             padding: 0.5rem 1rem;
             border-radius: 0.375rem;
@@ -46,25 +80,61 @@
         .message-error { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
         .message-success { background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
 
-        /* Estilos para la sección de IA */
         .ai-response-study {
-            background-color: #eef2ff; /* Azul claro para estudio */
-            border-left: 4px solid #6366f1; /* Borde índigo */
+            background-color: #eef2ff; 
+            border-left: 4px solid #6366f1; 
             color: #3730a3;
         }
         .ai-response-creativity {
-            background-color: #fff7ed; /* Naranja claro para creatividad */
-            border-left: 4px solid #f97316; /* Borde naranja */
+            background-color: #fff7ed; 
+            border-left: 4px solid #f97316; 
             color: #9a3412;
         }
         .ai-mode-button.active {
-            background-color: #9e683b; /* Ocre */
+            background-color: #9e683b; 
             color: #fdf6f0;
             font-weight: bold;
         }
          .ai-mode-button {
-            background-color: #e0d8d0; /* Beige oscuro */
-            color: #3b3b3b; /* Gris petróleo */
+            background-color: #e0d8d0; 
+            color: #3b3b3b; 
+        }
+
+        #uploadedImagePreview {
+            max-height: 200px; 
+            max-width: 100%;
+            object-fit: contain;
+            border-radius: 0.5rem;
+            border: 1px solid #d1c5b8;
+        }
+        #imageModal {
+            z-index: 100; 
+        }
+        #enlargedImageView {
+            max-height: 80vh;
+            max-width: 80vw;
+            object-fit: contain;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        #closeImageModalButton {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: rgba(0,0,0,0.5);
+            color: white;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        #closeImageModalButton:hover {
+            background-color: rgba(0,0,0,0.7);
         }
     </style>
 </head>
@@ -106,17 +176,34 @@
             </div>
         </section>
 
-        <section id="spotifySection" class="bg-canvas p-6 rounded-xl soft-shadow artistic-border section-oil-effect">
-            <h2 class="font-artistic text-2xl text-timer mb-4 text-center">Tu Banda Sonora</h2>
-            <div class="space-y-3">
-                <input type="text" id="spotifyLinkInput" placeholder="Pega aquí el enlace de tu playlist de Spotify" class="w-full p-3 rounded-lg input-style focus:outline-none focus:ring-2 focus:ring-[#9e683b]">
-                <button id="saveSpotifyLinkButton" class="btn-active w-full py-2 px-4 rounded-lg font-semibold">Cargar Playlist</button>
-                <div id="spotifyMessagePlaceholder" class="h-6 mt-1"></div>
-            </div>
-            <div id="spotifyPlayerContainer" class="mt-6 aspect-w-16 aspect-h-9 min-h-[80px] sm:min-h-[200px] md:min-h-[380px]">
-                <p id="spotifyDefaultPlaceholder" class="text-center text-[#657153] italic">Activa la música y carga una playlist para empezar.</p>
+        <section id="imageReferenceSection" class="bg-canvas p-6 rounded-xl soft-shadow artistic-border section-oil-effect">
+            <h2 class="font-artistic text-2xl text-timer mb-4 text-center">Tu Apoyo Visual 🖼️</h2>
+            <label for="imageUploadInput" class="input-file-style block text-center text-[#657153] mb-4">
+                Haz clic aquí para seleccionar una imagen
+            </label>
+            <input type="file" id="imageUploadInput" accept="image/*" class="hidden">
+
+            <div id="imagePreviewContainer" class="text-center space-y-3">
+                <img id="uploadedImagePreview" src="#" alt="Imagen de referencia cargada" class="hidden mx-auto">
+                <p id="imageUploadPlaceholder" class="text-[#657153] italic">Sube una imagen para tenerla como referencia rápida.</p>
+                <div id="imageControls" class="hidden space-x-2">
+                    <button id="enlargeImageButton" class="btn-control px-4 py-1.5 rounded-lg text-sm">Ampliar Imagen</button>
+                    <button id="removeImageButton" class="btn-control px-4 py-1.5 rounded-lg text-sm bg-red-700 hover:bg-red-800">Quitar Imagen</button>
+                </div>
             </div>
         </section>
+
+        <section id="soundtrackSection" class="bg-canvas p-6 rounded-xl soft-shadow artistic-border section-oil-effect">
+            <h2 class="font-artistic text-2xl text-timer mb-4 text-center">Tu Banda Sonora 🎶</h2>
+            <div class="space-y-3">
+                <input type="text" id="playlistLinkInput" placeholder="Pega enlace de playlist (Spotify o YouTube)" class="w-full p-3 rounded-lg input-style focus:outline-none focus:ring-2 focus:ring-[#9e683b]">
+                <button id="loadPlaylistButton" class="btn-active w-full py-2 px-4 rounded-lg font-semibold">Cargar Playlist</button>
+                <div id="playlistMessagePlaceholder" class="h-6 mt-1"></div>
+            </div>
+            <div id="playerHost" class="mt-6 min-h-[80px] md:min-h-[300px] player-wrapper"> <p id="playerDefaultPlaceholder" class="text-center text-[#657153] italic absolute inset-0 flex items-center justify-center">Activa la música y carga una playlist para empezar.</p>
+                 </div>
+        </section>
+
 
         <section id="aiSection" class="bg-canvas p-6 rounded-xl soft-shadow artistic-border section-oil-effect">
             <h2 class="font-artistic text-2xl text-timer mb-6 text-center">Sugerencias Inteligentes ✨</h2>
@@ -183,11 +270,18 @@
             <button id="proceedNextPhaseButton" class="btn-active w-full py-2.5 px-4 rounded-lg font-semibold">Comenzar</button>
         </div>
     </div>
+
+    <div id="imageModal" class="fixed inset-0 modal-backdrop flex items-center justify-center p-4 hidden">
+        <div class="relative">
+            <img id="enlargedImageView" src="#" alt="Imagen de referencia ampliada">
+            <button id="closeImageModalButton" title="Cerrar imagen">×</button>
+        </div>
+    </div>
     
     <audio id="notificationSound" preload="auto"></audio>
 
     <script>
-        // Elementos del DOM (Temporizador y General)
+        // --- DOM Elements ---
         const timeDisplay = document.getElementById('timeDisplay');
         const timerProgress = document.getElementById('timerProgress');
         const startButton = document.getElementById('startButton');
@@ -196,19 +290,16 @@
         const settingsButton = document.getElementById('settingsButton');
         const currentModeDisplay = document.getElementById('currentModeDisplay');
         const notificationSound = document.getElementById('notificationSound');
-
-        // Elementos del DOM (Música)
         const musicToggleButton = document.getElementById('musicToggleButton');
         const musicToggleText = document.getElementById('musicToggleText');
         const musicIcon = document.getElementById('musicIcon');
-        const spotifyLinkInput = document.getElementById('spotifyLinkInput');
-        const saveSpotifyLinkButton = document.getElementById('saveSpotifyLinkButton');
-        const spotifyPlayerContainer = document.getElementById('spotifyPlayerContainer');
-        const spotifyDefaultPlaceholder = document.getElementById('spotifyDefaultPlaceholder');
-        const spotifyMessagePlaceholder = document.getElementById('spotifyMessagePlaceholder');
-
-
-        // Elementos del DOM (Configuración Modal)
+        // Soundtrack Section
+        const playlistLinkInput = document.getElementById('playlistLinkInput');
+        const loadPlaylistButton = document.getElementById('loadPlaylistButton');
+        const playerHost = document.getElementById('playerHost'); // Nuevo contenedor general
+        const playerDefaultPlaceholder = document.getElementById('playerDefaultPlaceholder');
+        const playlistMessagePlaceholder = document.getElementById('playlistMessagePlaceholder');
+        // Settings Modal
         const settingsModal = document.getElementById('settingsModal');
         const workTimeInput = document.getElementById('workTimeInput');
         const shortBreakInput = document.getElementById('shortBreakInput');
@@ -217,64 +308,52 @@
         const saveSettingsButton = document.getElementById('saveSettingsButton');
         const cancelSettingsButton = document.getElementById('cancelSettingsButton');
         const settingsMessagePlaceholder = document.getElementById('settingsMessagePlaceholder');
-
-        // Elementos del DOM (Modal Fin de Sesión)
+        // Session End Modal
         const sessionEndModal = document.getElementById('sessionEndModal');
         const sessionEndTitle = document.getElementById('sessionEndTitle');
         const sessionEndMessage = document.getElementById('sessionEndMessage');
         const proceedNextPhaseButton = document.getElementById('proceedNextPhaseButton');
-        
-        // Elementos del DOM (Sección IA)
+        // AI Section
         const aiModeStudyButton = document.getElementById('aiModeStudy');
         const aiModeCreativityButton = document.getElementById('aiModeCreativity');
         const aiQuestionInput = document.getElementById('aiQuestionInput');
         const getAiSuggestionButton = document.getElementById('getAiSuggestionButton');
         const aiResponseContainer = document.getElementById('aiResponseContainer');
         const aiLoadingIndicator = document.getElementById('aiLoadingIndicator');
+        // Image Reference Section
+        const imageUploadInput = document.getElementById('imageUploadInput');
+        const uploadedImagePreview = document.getElementById('uploadedImagePreview');
+        const imageUploadPlaceholder = document.getElementById('imageUploadPlaceholder');
+        const imageControls = document.getElementById('imageControls');
+        const enlargeImageButton = document.getElementById('enlargeImageButton');
+        const removeImageButton = document.getElementById('removeImageButton');
+        const imageModal = document.getElementById('imageModal');
+        const enlargedImageView = document.getElementById('enlargedImageView');
+        const closeImageModalButton = document.getElementById('closeImageModalButton');
 
-        // Configuración del temporizador (valores por defecto)
-        let workTime = 25 * 60; 
-        let shortBreakTime = 5 * 60;
-        let longBreakTime = 15 * 60;
+        // --- App State & Config ---
+        let workTime = 25 * 60, shortBreakTime = 5 * 60, longBreakTime = 15 * 60;
         let selectedAlarmSound = 'https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg';
-
-        let currentTime = workTime;
-        let timerInterval;
-        let isPaused = false;
-        let currentMode = 'work'; // 'work', 'shortBreak', 'longBreak'
-        let pomodoroCount = 0; 
-
-        // Configuración de música
+        let currentTime = workTime, timerInterval, isPaused = false, currentMode = 'work', pomodoroCount = 0;
         let musicEnabled = false;
-        let spotifyEmbedUrl = '';
-        let spotifyPlayer;
+        let activePlayer = null; // 'spotify' o 'youtube'
+        let activePlayerIframe = null; // Referencia al iframe del reproductor activo
+        let currentAiMode = 'study';
+        const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * 45;
 
-        // Configuración IA
-        let currentAiMode = 'study'; // 'study' o 'creativity'
-
-        const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * 45; // 2 * PI * radius
-
-        // --- Utilidad para Mensajes Temporales ---
+        // --- Utility Functions ---
         function showTemporaryMessage(element, message, type = 'error', duration = 3000) {
             element.textContent = message;
-            element.className = `temporary-message message-${type}`; // Reemplaza clases existentes
-            setTimeout(() => {
-                element.textContent = '';
-                element.className = ''; // Limpia clases
-            }, duration);
+            element.className = `temporary-message message-${type}`; 
+            setTimeout(() => { element.textContent = ''; element.className = ''; }, duration);
         }
         
-        // --- Lógica del Temporizador ---
+        // --- Timer Logic ---
         function updateDisplay() {
             const minutes = Math.floor(currentTime / 60);
             const seconds = currentTime % 60;
             timeDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-            
-            let totalDuration;
-            if (currentMode === 'work') totalDuration = workTime;
-            else if (currentMode === 'shortBreak') totalDuration = shortBreakTime;
-            else totalDuration = longBreakTime;
-
+            let totalDuration = currentMode === 'work' ? workTime : (currentMode === 'shortBreak' ? shortBreakTime : longBreakTime);
             const progress = totalDuration > 0 ? ((totalDuration - currentTime) / totalDuration) * CIRCLE_CIRCUMFERENCE : 0;
             timerProgress.style.strokeDashoffset = progress;
         }
@@ -285,6 +364,7 @@
             startButton.classList.add('hidden');
             pauseButton.classList.remove('hidden');
             updateCurrentModeDisplay();
+            if (musicEnabled && activePlayerIframe && currentMode === 'work') sendPlayerCommand('play');
 
             timerInterval = setInterval(() => {
                 if (!isPaused && currentTime > 0) {
@@ -303,29 +383,22 @@
             pauseButton.classList.add('hidden');
             startButton.classList.remove('hidden');
             startButton.textContent = 'Reanudar';
+            if (musicEnabled && activePlayerIframe) sendPlayerCommand('pause');
         }
 
         function resetTimer(mode = 'work', manualReset = true) {
             clearInterval(timerInterval);
             isPaused = false;
             currentMode = mode;
-            
-            if (manualReset) {
-                 pomodoroCount = 0;
-            }
-
-            if (mode === 'work') currentTime = workTime;
-            else if (mode === 'shortBreak') currentTime = shortBreakTime;
-            else currentTime = longBreakTime;
-            
+            if (manualReset) pomodoroCount = 0;
+            currentTime = mode === 'work' ? workTime : (mode === 'shortBreak' ? shortBreakTime : longBreakTime);
             updateDisplay();
             updateCurrentModeDisplay();
             startButton.classList.remove('hidden');
             pauseButton.classList.add('hidden');
             startButton.textContent = 'Iniciar';
-            if (musicEnabled && spotifyPlayer) {
-                 if (currentMode === 'work') spotifyPlayer.contentWindow.postMessage(JSON.stringify({ command: 'play' }), '*');
-                 else spotifyPlayer.contentWindow.postMessage(JSON.stringify({ command: 'pause' }), '*');
+            if (musicEnabled && activePlayerIframe) {
+                 sendPlayerCommand(currentMode === 'work' ? 'play' : 'pause');
             }
         }
         
@@ -341,27 +414,14 @@
 
         function handleSessionEnd() {
             playNotificationSound();
-            let title = '';
-            let message = '';
-            let buttonText = '';
-
+            let title = '', message = '', buttonText = '';
             if (currentMode === 'work') {
-                title = '¡Trabajo Terminado!';
-                pomodoroCount++;
-                if (pomodoroCount % 4 === 0) {
-                    message = '¡Excelente! Es hora de un merecido descanso largo.';
-                    buttonText = 'Iniciar Descanso Largo';
-                } else {
-                    message = 'Buen trabajo. Toma un descanso corto.';
-                    buttonText = 'Iniciar Descanso Corto';
-                }
-            } else if (currentMode === 'shortBreak') {
-                title = '¡Descanso Corto Finalizado!';
-                message = '¿Listo para otra sesión de trabajo?';
-                buttonText = 'Iniciar Trabajo';
-            } else { // longBreak
-                title = '¡Descanso Largo Finalizado!';
-                message = 'Espero hayas recargado energías. ¡A trabajar!';
+                title = '¡Trabajo Terminado!'; pomodoroCount++;
+                message = pomodoroCount % 4 === 0 ? '¡Excelente! Es hora de un merecido descanso largo.' : 'Buen trabajo. Toma un descanso corto.';
+                buttonText = pomodoroCount % 4 === 0 ? 'Iniciar Descanso Largo' : 'Iniciar Descanso Corto';
+            } else {
+                title = currentMode === 'shortBreak' ? '¡Descanso Corto Finalizado!' : '¡Descanso Largo Finalizado!';
+                message = '¿Listo para la siguiente fase?';
                 buttonText = 'Iniciar Trabajo';
             }
             sessionEndTitle.textContent = title;
@@ -377,12 +437,11 @@
 
         function switchToNextMode() {
             if (currentMode === 'work') {
-                if (pomodoroCount % 4 === 0) currentMode = 'longBreak';
-                else currentMode = 'shortBreak';
+                currentMode = pomodoroCount % 4 === 0 ? 'longBreak' : 'shortBreak';
             } else { 
                 currentMode = 'work';
             }
-            resetTimer(currentMode, false); // false para no resetear pomodoroCount
+            resetTimer(currentMode, false); 
             startTimer(); 
         }
 
@@ -392,7 +451,7 @@
             notificationSound.play().catch(error => console.warn("Error al reproducir sonido:", error));
         }
 
-        // --- Lógica de Configuración ---
+        // --- Settings Logic ---
         settingsButton.addEventListener('click', () => {
             workTimeInput.value = workTime / 60;
             shortBreakInput.value = shortBreakTime / 60;
@@ -400,23 +459,15 @@
             alarmSoundSelect.value = selectedAlarmSound;
             settingsModal.classList.remove('hidden');
         });
-
         cancelSettingsButton.addEventListener('click', () => {
             settingsModal.classList.add('hidden');
-            settingsMessagePlaceholder.textContent = ''; // Limpiar mensajes
+            settingsMessagePlaceholder.textContent = ''; 
         });
-
         saveSettingsButton.addEventListener('click', () => {
-            const newWorkTime = parseInt(workTimeInput.value);
-            const newShortBreak = parseInt(shortBreakInput.value);
-            const newLongBreak = parseInt(longBreakInput.value);
-
+            const newWorkTime = parseInt(workTimeInput.value), newShortBreak = parseInt(shortBreakInput.value), newLongBreak = parseInt(longBreakInput.value);
             if (newWorkTime > 0 && newShortBreak > 0 && newLongBreak > 0) {
-                workTime = newWorkTime * 60;
-                shortBreakTime = newShortBreak * 60;
-                longBreakTime = newLongBreak * 60;
+                workTime = newWorkTime * 60; shortBreakTime = newShortBreak * 60; longBreakTime = newLongBreak * 60;
                 selectedAlarmSound = alarmSoundSelect.value;
-                
                 settingsModal.classList.add('hidden');
                 resetTimer(currentMode, false); 
                 showTemporaryMessage(settingsMessagePlaceholder, 'Configuración guardada.', 'success');
@@ -425,87 +476,117 @@
             }
         });
 
-        // --- Lógica de Música y Spotify ---
+        // --- Soundtrack Logic (Spotify & YouTube) ---
         musicToggleButton.addEventListener('click', () => {
             musicEnabled = !musicEnabled;
             musicToggleText.textContent = musicEnabled ? 'Desactivar Música' : 'Activar Música';
             if (musicEnabled) {
                 musicIcon.innerHTML = `<path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle><line x1="9" y1="8" x2="18" y2="6"></line>`;
-                if (spotifyEmbedUrl && !spotifyPlayer) { 
-                    loadSpotifyPlayer(spotifyEmbedUrl);
-                } else if (spotifyPlayer && currentMode === 'work' && !isPaused) {
-                    spotifyPlayer.contentWindow.postMessage(JSON.stringify({ command: 'play' }), '*');
-                }
-                spotifyDefaultPlaceholder.classList.toggle('hidden', !!spotifyPlayer);
+                if (activePlayerIframe && currentMode === 'work' && !isPaused) sendPlayerCommand('play');
+                playerDefaultPlaceholder.classList.toggle('hidden', !!activePlayerIframe);
             } else {
                 musicIcon.innerHTML = `<path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle><line x1="1" y1="1" x2="23" y2="23"></line>`;
-                if (spotifyPlayer) {
-                    spotifyPlayer.contentWindow.postMessage(JSON.stringify({ command: 'pause' }), '*');
-                }
-                 spotifyDefaultPlaceholder.classList.remove('hidden');
+                if (activePlayerIframe) sendPlayerCommand('pause');
+                playerDefaultPlaceholder.classList.remove('hidden');
             }
         });
 
-        saveSpotifyLinkButton.addEventListener('click', () => {
-            const link = spotifyLinkInput.value.trim();
-            if (link) {
-                let embedLink = link;
-                // Regex para extraer tipo y ID de varios formatos de URL de Spotify
-                const spotifyRegex = /https?:\/\/open\.spotify\.com\/(user\/[a-zA-Z0-9]+\/)?(playlist|track|album|episode|show)\/([a-zA-Z0-9]+)/;
-                const match = link.match(spotifyRegex);
-
-                if (match && match[2] && match[3]) {
-                    const type = match[2];
-                    const id = match[3];
-                    embedLink = `https://open.spotify.com/embed/${type}/${id}`;
-                } else if (!link.includes("https://open.spotify.com/embed/")) {
-                     showTemporaryMessage(spotifyMessagePlaceholder, 'Enlace de Spotify no válido. Usa el enlace "Compartir > Insertar playlist/canción/álbum" o el enlace directo.', 'error', 5000);
-                    return;
-                }
-
-
-                spotifyEmbedUrl = embedLink;
-                if (musicEnabled) {
-                    loadSpotifyPlayer(spotifyEmbedUrl);
-                } else {
-                    showTemporaryMessage(spotifyMessagePlaceholder, 'Playlist lista. Activa la música para reproducir.', 'success');
-                    if(spotifyPlayer) spotifyPlayer.remove(); spotifyPlayer = null;
-                    spotifyDefaultPlaceholder.classList.remove('hidden');
-                }
-                spotifyLinkInput.value = ''; // Limpiar input
-            } else {
-                 showTemporaryMessage(spotifyMessagePlaceholder, 'Por favor, pega un enlace de Spotify.', 'error');
+        loadPlaylistButton.addEventListener('click', () => {
+            const link = playlistLinkInput.value.trim();
+            if (!link) {
+                showTemporaryMessage(playlistMessagePlaceholder, 'Por favor, pega un enlace de playlist.', 'error');
+                return;
             }
+            
+            playerHost.innerHTML = ''; // Limpiar reproductor anterior
+            playerDefaultPlaceholder.classList.add('hidden');
+            activePlayerIframe = null;
+            activePlayer = null;
+
+            // Intenta detectar Spotify
+            const spotifyRegex = /https?:\/\/open\.spotify\.com\/(playlist|track|album)\/([a-zA-Z0-9]+)/;
+            const spotifyMatch = link.match(spotifyRegex);
+            if (spotifyMatch && spotifyMatch[1] && spotifyMatch[2]) {
+                const type = spotifyMatch[1];
+                const id = spotifyMatch[2];
+                const embedUrl = `https://open.spotify.com/embed/${type}/${id}`;
+                loadSpotifyPlayer(embedUrl);
+                playlistLinkInput.value = '';
+                return;
+            }
+
+            // Intenta detectar YouTube Playlist
+            const youtubePlaylistRegex = /(?:https?:\/\/)?(?:www\.)?youtube\.com\/playlist\?list=([a-zA-Z0-9_-]+)/;
+            const youtubePlaylistMatch = link.match(youtubePlaylistRegex);
+            if (youtubePlaylistMatch && youtubePlaylistMatch[1]) {
+                const playlistId = youtubePlaylistMatch[1];
+                const embedUrl = `https://www.youtube.com/embed/videoseries?list=${playlistId}&autoplay=1`; // Autoplay para YouTube
+                loadYouTubePlayer(embedUrl);
+                playlistLinkInput.value = '';
+                return;
+            }
+            
+            // Si no es ninguno de los dos
+            showTemporaryMessage(playlistMessagePlaceholder, 'Enlace no reconocido (Spotify o YouTube Playlist).', 'error', 4000);
+            playerDefaultPlaceholder.classList.remove('hidden');
         });
 
-        function loadSpotifyPlayer(embedUrl) {
-            if (spotifyPlayer) spotifyPlayer.remove();
-            spotifyPlayerContainer.innerHTML = ''; 
-            spotifyDefaultPlaceholder.classList.add('hidden');
-
+        function createPlayerIframe(src, allow) {
             const iframe = document.createElement('iframe');
             iframe.style.borderRadius = "12px";
-            iframe.src = embedUrl;
-            iframe.width = "100%";
-            iframe.height = "100%"; 
+            iframe.src = src;
             iframe.frameBorder = "0";
-            iframe.allowFullscreen = "";
-            iframe.allow = "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture";
+            iframe.allowFullscreen = true;
+            iframe.allow = allow;
             iframe.loading = "lazy";
-            
-            spotifyPlayerContainer.appendChild(iframe);
-            spotifyPlayer = iframe;
-
-            iframe.onload = () => {
-                if (musicEnabled && currentMode === 'work' && !isPaused) {
-                     setTimeout(() => { 
-                        spotifyPlayer.contentWindow.postMessage(JSON.stringify({ command: 'play' }), '*');
-                    }, 500);
-                }
-            };
+            playerHost.appendChild(iframe);
+            return iframe;
         }
 
-        // --- Lógica de la Sección de IA ---
+        function loadSpotifyPlayer(embedUrl) {
+            activePlayerIframe = createPlayerIframe(embedUrl, "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture");
+            activePlayer = 'spotify';
+            activePlayerIframe.onload = () => {
+                if (musicEnabled && currentMode === 'work' && !isPaused) sendPlayerCommand('play');
+            };
+            showTemporaryMessage(playlistMessagePlaceholder, 'Playlist de Spotify cargada.', 'success');
+        }
+
+        function loadYouTubePlayer(embedUrl) {
+            activePlayerIframe = createPlayerIframe(embedUrl, "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
+            activePlayer = 'youtube';
+            // YouTube autoplay está en la URL, no necesita postMessage inicial si la música está activa.
+            // Si la música no está activa, no debería sonar.
+            if (!musicEnabled || (currentMode !== 'work' && !isPaused) ) {
+                // Para evitar autoplay si no debe, podríamos recargar el iframe sin autoplay o enviar 'pause'
+                // Pero es más complejo. Por ahora, el autoplay en la URL es más simple.
+            }
+            showTemporaryMessage(playlistMessagePlaceholder, 'Playlist de YouTube cargada.', 'success');
+        }
+        
+        function sendPlayerCommand(command) {
+            if (!activePlayerIframe || !activePlayerIframe.contentWindow) return;
+            
+            let message;
+            if (activePlayer === 'spotify') {
+                message = JSON.stringify({ command: command }); // Spotify usa JSON string
+                activePlayerIframe.contentWindow.postMessage(message, 'https://open.spotify.com/embed/');
+            } else if (activePlayer === 'youtube') {
+                // YouTube player API usa una estructura diferente para postMessage
+                let func = command === 'play' ? 'playVideo' : (command === 'pause' ? 'pauseVideo' : null);
+                if (func) {
+                    message = JSON.stringify({
+                        event: 'command',
+                        func: func,
+                        args: ''
+                    });
+                    activePlayerIframe.contentWindow.postMessage(message, 'https://www.youtube.com');
+                }
+            }
+        }
+
+
+        // --- AI Logic ---
         aiModeStudyButton.addEventListener('click', () => {
             currentAiMode = 'study';
             aiModeStudyButton.classList.add('active');
@@ -513,7 +594,6 @@
             aiResponseContainer.className = 'mt-6 p-4 rounded-lg min-h-[50px] whitespace-pre-wrap ai-response-study';
             if (!aiResponseContainer.classList.contains('hidden')) aiResponseContainer.classList.add('hidden'); 
         });
-
         aiModeCreativityButton.addEventListener('click', () => {
             currentAiMode = 'creativity';
             aiModeCreativityButton.classList.add('active');
@@ -521,7 +601,6 @@
             aiResponseContainer.className = 'mt-6 p-4 rounded-lg min-h-[50px] whitespace-pre-wrap ai-response-creativity';
             if (!aiResponseContainer.classList.contains('hidden')) aiResponseContainer.classList.add('hidden');
         });
-        
         getAiSuggestionButton.addEventListener('click', async () => {
             const question = aiQuestionInput.value.trim();
             if (!question) {
@@ -530,53 +609,28 @@
                 aiResponseContainer.classList.remove('hidden');
                 return;
             }
-
             aiLoadingIndicator.classList.remove('hidden');
             aiResponseContainer.classList.add('hidden');
             getAiSuggestionButton.disabled = true;
-
-            let prompt;
-            if (currentAiMode === 'study') {
-                prompt = `Eres un tutor académico experto y amigable. Ayuda al estudiante con la siguiente pregunta de manera clara, concisa y educativa. Si es un problema matemático, muestra los pasos si es posible:\n\n"${question}"`;
-            } else { // creativity
-                prompt = `Eres un asistente creativo, inspirador y entusiasta. Ofrece ideas originales y sugerencias útiles para la siguiente petición o idea. Anima al usuario a explorar su creatividad:\n\n"${question}"`;
-            }
-
+            let prompt = currentAiMode === 'study' ? 
+                `Eres un tutor académico experto y amigable. Ayuda al estudiante con la siguiente pregunta de manera clara, concisa y educativa. Si es un problema matemático, muestra los pasos si es posible:\n\n"${question}"` :
+                `Eres un asistente creativo, inspirador y entusiasta. Ofrece ideas originales y sugerencias útiles para la siguiente petición o idea. Anima al usuario a explorar su creatividad:\n\n"${question}"`;
             try {
-                // Usando la clave de API proporcionada directamente.
-                // Si se ejecuta en un entorno que inyecta la clave (como Canvas), la línea original era: const apiKey = "";
                 const apiKey = "AIzaSyCSSfVuLqCyrQIRZqWGULr8BxoMmLLY4OY"; 
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-                
-                const payload = {
-                    contents: [{ role: "user", parts: [{ text: prompt }] }]
-                };
-
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
+                const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
+                const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
                 if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error('Error de API:', errorData);
-                    throw new Error(`Error de la API: ${errorData.error?.message || response.statusText}`);
+                    const errorData = await response.json(); throw new Error(`Error de la API: ${errorData.error?.message || response.statusText}`);
                 }
-
                 const result = await response.json();
-                
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    const text = result.candidates[0].content.parts[0].text;
-                    aiResponseContainer.textContent = text;
+                if (result.candidates?.[0]?.content?.parts?.[0]?.text) {
+                    aiResponseContainer.textContent = result.candidates[0].content.parts[0].text;
                     aiResponseContainer.className = `mt-6 p-4 rounded-lg min-h-[50px] whitespace-pre-wrap ${currentAiMode === 'study' ? 'ai-response-study' : 'ai-response-creativity'}`;
                 } else {
                     aiResponseContainer.textContent = 'No se pudo obtener una respuesta con el formato esperado.';
                     aiResponseContainer.className = `mt-6 p-4 rounded-lg min-h-[50px] whitespace-pre-wrap message-error`;
                 }
-
             } catch (error) {
                 console.error("Error al obtener sugerencia de IA:", error);
                 aiResponseContainer.textContent = `Error: ${error.message}. Intenta de nuevo más tarde.`;
@@ -588,15 +642,43 @@
             }
         });
 
-
-        // --- Event Listeners de Controles del Temporizador ---
-        startButton.addEventListener('click', () => {
-            if (currentTime > 0) startTimer();
+        // --- Visual Reference Logic ---
+        imageUploadInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedImagePreview.src = e.target.result;
+                    uploadedImagePreview.classList.remove('hidden');
+                    imageUploadPlaceholder.classList.add('hidden');
+                    imageControls.classList.remove('hidden');
+                }
+                reader.readAsDataURL(file);
+            } else {
+                showTemporaryMessage(imageUploadPlaceholder.parentElement, "Por favor, selecciona un archivo de imagen.", 'error');
+                removeUploadedImage();
+            }
         });
-        pauseButton.addEventListener('click', pauseTimer);
-        resetButton.addEventListener('click', () => resetTimer('work', true));
+        enlargeImageButton.addEventListener('click', function() {
+            if (uploadedImagePreview.src && uploadedImagePreview.src !== '#') {
+                enlargedImageView.src = uploadedImagePreview.src;
+                imageModal.classList.remove('hidden');
+            }
+        });
+        closeImageModalButton.addEventListener('click', function() {
+            imageModal.classList.add('hidden');
+            enlargedImageView.src = '#';
+        });
+        removeImageButton.addEventListener('click', removeUploadedImage);
+        function removeUploadedImage() {
+            uploadedImagePreview.src = '#';
+            uploadedImagePreview.classList.add('hidden');
+            imageUploadPlaceholder.classList.remove('hidden');
+            imageControls.classList.add('hidden');
+            imageUploadInput.value = null;
+        }
 
-        // Inicialización al cargar la página
+        // --- App Initialization ---
         function initializeApp() {
             notificationSound.src = selectedAlarmSound; 
             timerProgress.style.strokeDasharray = CIRCLE_CIRCUMFERENCE;
@@ -604,11 +686,13 @@
             updateDisplay();
             updateCurrentModeDisplay();
             aiModeStudyButton.click(); 
+            // Asegurar que el playerHost esté limpio al inicio y se vea el placeholder
+            playerHost.innerHTML = ''; // Limpiar cualquier iframe persistente
+            playerHost.appendChild(playerDefaultPlaceholder); // Añadir el placeholder
+            playerDefaultPlaceholder.classList.remove('hidden');
+
         }
-
         initializeApp();
-
     </script>
 </body>
 </html>
-
