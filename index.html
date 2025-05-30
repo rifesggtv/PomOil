@@ -111,6 +111,7 @@
         .page-footer {
             text-align: center;
             margin-top: 2rem;
+            margin-bottom: 2rem; /* Añadido para más espacio al final */
             padding: 1rem;
             font-size: 0.8rem;
             color: #657153; /* Verde oliva */
@@ -383,6 +384,16 @@
             notificationSound.src = selectedAlarmSound; notificationSound.currentTime = 0; 
             notificationSound.play().catch(error => console.warn("Error al reproducir sonido:", error));
         }
+
+        // --- Event Listeners for Timer Buttons --- ADDED BACK
+        startButton.addEventListener('click', () => {
+            if (currentTime > 0) { 
+                 startTimer();
+            }
+        });
+        pauseButton.addEventListener('click', pauseTimer);
+        resetButton.addEventListener('click', () => resetTimer('work', true));
+
 
         // --- Settings Logic ---
         settingsButton.addEventListener('click', () => {
