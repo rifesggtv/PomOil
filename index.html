@@ -37,7 +37,7 @@
         .section-oil-effect::before { top: -5px; left: 2%; width: 96%; height: 15px; background: linear-gradient(to bottom, rgba(158, 104, 59, 0.3), transparent); filter: blur(3px); }
         .section-oil-effect::after { bottom: -5px; left: 2%; width: 96%; height: 15px; background: linear-gradient(to top, rgba(158, 104, 59, 0.3), transparent); filter: blur(3px); }
         
-        .player-wrapper { /* Para Spotify */
+        .player-wrapper { 
             position: relative; 
             height: 80px; 
             overflow: hidden;
@@ -61,98 +61,71 @@
         .ai-mode-button.active { background-color: #9e683b; color: #fdf6f0; font-weight: bold; }
         .ai-mode-button { background-color: #e0d8d0; color: #3b3b3b; }
 
-        /* Apoyo Visual */
         #imageUploadDropArea {
-            border: 2px dashed #9e683b;
-            padding: 1.5rem; 
-            border-radius: 0.75rem; 
-            text-align: center;
-            cursor: pointer;
-            transition: background-color 0.2s ease, border-color 0.2s ease;
-            background-color: #fbf3eb; 
+            border: 2px dashed #9e683b; padding: 1.5rem; border-radius: 0.75rem; text-align: center;
+            cursor: pointer; transition: background-color 0.2s ease, border-color 0.2s ease; background-color: #fbf3eb; 
         }
-        #imageUploadDropArea.dragover {
-            background-color: #f5e9dd; 
-            border-color: #c28f52; 
-        }
+        #imageUploadDropArea.dragover { background-color: #f5e9dd; border-color: #c28f52; }
         #uploadedImagePreview { max-height: 200px; max-width: 100%; object-fit: contain; border-radius: 0.5rem; border: 1px solid #d1c5b8; }
         #imageModal { z-index: 100; }
         #enlargedImageView { max-height: 80vh; max-width: 80vw; object-fit: contain; border-radius: 0.5rem; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         #closeImageModalButton { position: absolute; top: 1rem; right: 1rem; background-color: rgba(0,0,0,0.5); color: white; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; transition: background-color 0.2s ease; }
         #closeImageModalButton:hover { background-color: rgba(0,0,0,0.7); }
 
-        /* Visualizador de Audio Ambiental Vertical */
         #ambientAudioVisualizerCanvasVertical {
-            width: 100%; 
-            height: 150px; 
-            background-color: #e0d8d0; 
-            border-radius: 8px;
-            margin: 1rem auto 0 auto; /* Ajuste de margen superior */
-            border: 1px solid #c2b6a9;
+            width: 100%; height: 150px; background-color: #e0d8d0; border-radius: 8px;
+            margin: 1rem auto 0 auto; border: 1px solid #c2b6a9;
         }
         #ambientAudioWarning { margin-top: 0.5rem; font-size: 0.8rem; color: #8c6f56; text-align: center; min-height: 1.2em; }
         .btn-visualizer-action { background-color: #8aa073; color: #fdf6f0; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; margin-bottom: 0.5rem; transition: background-color 0.3s ease; }
         .btn-visualizer-action:hover { background-color: #657153; }
-        #ambientAudioVisualizerSection .youtube-search-form { 
-            margin-top: 1rem; 
-            display: flex; 
-            gap: 0.5rem; 
-            justify-content: center;
-        }
-        #ambientAudioVisualizerSection .youtube-search-input { 
-            padding: 0.6rem; 
-            font-size: 0.9rem; 
-            border-radius: 5px; 
-            border: 1px solid #9e683b; 
-            width: 200px; 
-            background-color: #fff;
-        }
-        #ambientAudioVisualizerSection .youtube-search-button { 
-            background: #9e683b; 
-            color: white; 
-            border: none; 
-            padding: 0.6rem 1rem; 
-            border-radius: 5px; 
-            cursor: pointer; 
-            font-size: 0.9rem;
-        }
+        #ambientAudioVisualizerSection .youtube-search-form { margin-top: 1rem; display: flex; gap: 0.5rem; justify-content: center;}
+        #ambientAudioVisualizerSection .youtube-search-input { padding: 0.6rem; font-size: 0.9rem; border-radius: 5px; border: 1px solid #9e683b; width: 200px; background-color: #fff;}
+        #ambientAudioVisualizerSection .youtube-search-button { background: #9e683b; color: white; border: none; padding: 0.6rem 1rem; border-radius: 5px; cursor: pointer; font-size: 0.9rem;}
 
-        /* Lista de Tareas (To-Do List) */
         #todoSection .todo-input-group { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
         #todoSection #todoInput { flex-grow: 1; }
-        #todoSection #addTodoButton { background-color: #657153; /* Verde oliva */ }
+        #todoSection #addTodoButton { background-color: #657153; }
         #todoSection #todoList { list-style: none; padding: 0; }
         #todoSection .todo-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.75rem;
-            background-color: #fbf3eb; 
-            border: 1px solid #e0d8d0; 
-            border-radius: 6px;
-            margin-bottom: 0.5rem;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
+            display: flex; align-items: center; justify-content: space-between; padding: 0.75rem;
+            background-color: #fbf3eb; border: 1px solid #e0d8d0; border-radius: 6px;
+            margin-bottom: 0.5rem; cursor: pointer; transition: background-color 0.2s ease;
         }
         #todoSection .todo-item:hover { background-color: #f5e9dd; }
         #todoSection .todo-item.completed span { text-decoration: line-through; color: #8c6f56; }
         #todoSection .todo-item .delete-todo {
-            background-color: transparent;
-            border: none;
-            color: #c28f52; 
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 0.25rem;
+            background-color: transparent; border: none; color: #c28f52; 
+            font-size: 1.2rem; cursor: pointer; padding: 0.25rem;
         }
         #todoSection .todo-item .delete-todo:hover { color: #9e683b; }
+
+        .spotify-login-btn {
+            background-color: #1DB954; /* Color oficial de Spotify */
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        .spotify-login-btn:hover {
+            background-color: #1aa34a;
+        }
+        .page-footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            font-size: 0.8rem;
+            color: #657153; /* Verde oliva */
+        }
 
     </style>
 </head>
 <body class="bg-canvas text-main min-h-screen flex flex-col items-center p-4 selection:bg-[#9e683b] selection:text-[#fdf6f0]">
 
-    <header class="text-center mb-8 mt-8 md:mt-4">
+    <header class="text-center mb-6 mt-8 md:mt-4">
         <h1 class="font-artistic text-4xl md:text-5xl text-timer font-bold">PomOil</h1>
         <p class="text-sm text-[#657153] mt-1">Tu lienzo para concentrarte.</p>
+        <p class="text-base text-main mt-3 max-w-md mx-auto">
+            PomOil es tu compañero ideal para el estudio y la creatividad, fusionando la técnica Pomodoro con un ambiente artístico y relajante. Organiza tus sesiones, mantén el foco y encuentra inspiración, todo en un solo lugar.
+        </p>
     </header>
 
     <main class="w-full max-w-xl mx-auto space-y-8">
@@ -204,7 +177,13 @@
             <h2 class="font-artistic text-2xl text-timer mb-4 text-center">Tu Banda Sonora 🎶</h2>
             <div class="space-y-3">
                 <input type="text" id="playlistLinkInput" placeholder="Pega enlace de Spotify (playlist, álbum, canción)" class="w-full p-3 rounded-lg input-style focus:outline-none focus:ring-2 focus:ring-[#9e683b]">
-                <button id="loadPlaylistButton" class="btn-active w-full py-2 px-4 rounded-lg font-semibold">Cargar Música</button>
+                <div class="flex space-x-2 mt-2">
+                    <button id="loadPlaylistButton" class="btn-active w-2/3 py-2 px-4 rounded-lg font-semibold">Cargar Música</button>
+                    <button id="spotifyLoginButton" class="spotify-login-btn w-1/3 py-2 px-4 rounded-lg font-semibold flex items-center justify-center space-x-1.5" title="Abre Spotify para iniciar sesión. Mejora la experiencia de reproducción (especialmente para usuarios Premium).">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm6.223 17.996c-.242.363-.726.484-1.089.242-3.024-1.814-6.808-2.241-11.226-1.21C5.544 17.107 5 16.744 5 16.38c0-.363.423-.726.786-.847 4.841-1.15 9.038-.666 12.484 1.394.363.242.484.726.242 1.089v-.01zm1.029-2.843c-.302.423-.847.605-1.27.302-3.388-2.056-8.534-2.662-12.422-1.452-.423.181-.907-.06-.967-.484-.061-.424.182-.907.605-.968 4.459-1.33 10.086-.665 13.958 1.755.423.303.605.848.302 1.27v-.001zm.121-3.024c-3.903-2.42-10.406-2.601-14.42-1.452-.484.121-.968-.182-1.089-.665-.121-.484.182-.968.665-1.089C5.79 6.28 12.857 6.46 17.325 9.24c.484.303.726.848.423 1.27-.302.484-.847.727-1.27.424z"></path></svg>
+                        <span>Spotify</span>
+                    </button>
+                </div>
                 <div id="playlistMessagePlaceholder" class="h-6 mt-1"></div>
             </div>
             <div id="spotifyPlayerHost" class="mt-6 player-wrapper"> 
@@ -253,6 +232,12 @@
         </section>
     </main>
 
+    <footer class="page-footer">
+        <p>© 2024 PomOil. Todos los derechos reservados.</p>
+        <p class="mt-1">Nota: Algunas funciones como el visualizador de audio ambiental o la reproducción de Spotify pueden variar su comportamiento dependiendo del navegador y la configuración del dispositivo.</p>
+    </footer>
+
+
     <div id="settingsModal" class="fixed inset-0 modal-backdrop flex items-center justify-center p-4 hidden z-50">
         <div class="modal-content p-6 md:p-8 rounded-xl soft-shadow w-full max-w-md section-oil-effect">
             <h3 class="font-artistic text-2xl text-timer mb-6 text-center">Configuración General</h3>
@@ -289,6 +274,7 @@
         const spotifyPlayerHost = document.getElementById('spotifyPlayerHost'); 
         const playerDefaultPlaceholder = document.getElementById('playerDefaultPlaceholder');
         const playlistMessagePlaceholder = document.getElementById('playlistMessagePlaceholder');
+        const spotifyLoginButton = document.getElementById('spotifyLoginButton'); 
         const settingsModal = document.getElementById('settingsModal'), workTimeInput = document.getElementById('workTimeInput');
         const shortBreakInput = document.getElementById('shortBreakInput'), longBreakInput = document.getElementById('longBreakInput');
         const alarmSoundSelect = document.getElementById('alarmSoundSelect'), saveSettingsButton = document.getElementById('saveSettingsButton');
@@ -298,23 +284,19 @@
         const aiModeStudyButton = document.getElementById('aiModeStudy'), aiModeCreativityButton = document.getElementById('aiModeCreativity');
         const aiQuestionInput = document.getElementById('aiQuestionInput'), getAiSuggestionButton = document.getElementById('getAiSuggestionButton');
         const aiResponseContainer = document.getElementById('aiResponseContainer'), aiLoadingIndicator = document.getElementById('aiLoadingIndicator');
-        // Image Reference Section
         const imageUploadDropArea = document.getElementById('imageUploadDropArea');
         const imageUploadInput = document.getElementById('imageUploadInput'), uploadedImagePreview = document.getElementById('uploadedImagePreview');
         const imageUploadPlaceholder = document.getElementById('imageUploadPlaceholder'), imageControls = document.getElementById('imageControls');
         const enlargeImageButton = document.getElementById('enlargeImageButton'), removeImageButton = document.getElementById('removeImageButton');
         const imageModal = document.getElementById('imageModal'), enlargedImageView = document.getElementById('enlargedImageView'), closeImageModalButton = document.getElementById('closeImageModalButton');
-        // Ambient Audio Visualizer Section
         const ambientCanvasVertical = document.getElementById("ambientAudioVisualizerCanvasVertical");
         const ambientAudioWarning = document.getElementById("ambientAudioWarning");
         const toggleAmbientVisualizerButton = document.getElementById("toggleAmbientVisualizerButton");
-        const youtubeSearchForm = document.getElementById("youtubeSearchForm"); // Re-added
-        const youtubeSearchInput = document.getElementById("youtubeSearchInput"); // Re-added
-        // To-Do List Section
+        const youtubeSearchForm = document.getElementById("youtubeSearchForm"); 
+        const youtubeSearchInput = document.getElementById("youtubeSearchInput"); 
         const todoInput = document.getElementById('todoInput');
         const addTodoButton = document.getElementById('addTodoButton');
         const todoList = document.getElementById('todoList');
-
 
         // --- App State & Config ---
         let workTime = 25 * 60, shortBreakTime = 5 * 60, longBreakTime = 15 * 60;
@@ -324,21 +306,18 @@
         let spotifyPlayerIframe = null; 
         let currentAiMode = 'study';
         const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * 45;
-
-        // Ambient Audio Visualizer State
         let ambientAudioCtx, ambientAnalyser, ambientBufferLength, ambientDataArray;
         let ambientAnimationId = null;
         let isAmbientVisualizerActive = false;
         let mediaStreamSource = null;
 
-
         // --- Utility Functions ---
-        function showTemporaryMessage(element, message, type = 'error', duration = 3000) {
+        function showTemporaryMessage(element, message, type = 'error', duration = 3000) { 
             element.textContent = message; element.className = `temporary-message message-${type}`; 
             setTimeout(() => { element.textContent = ''; element.className = ''; }, duration);
         }
         
-        // --- Timer Logic (sin cambios) ---
+        // --- Timer Logic ---
         function updateDisplay() {
             const minutes = Math.floor(currentTime / 60), seconds = currentTime % 60;
             timeDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
@@ -405,7 +384,7 @@
             notificationSound.play().catch(error => console.warn("Error al reproducir sonido:", error));
         }
 
-        // --- Settings Logic (sin cambios) ---
+        // --- Settings Logic ---
         settingsButton.addEventListener('click', () => {
             workTimeInput.value = workTime / 60; shortBreakInput.value = shortBreakTime / 60;
             longBreakInput.value = longBreakTime / 60; alarmSoundSelect.value = selectedAlarmSound;
@@ -440,6 +419,13 @@
                 if (!spotifyPlayerIframe) playerDefaultPlaceholder.classList.remove('hidden');
             }
         });
+        
+        if(spotifyLoginButton) {
+            spotifyLoginButton.addEventListener('click', () => {
+                window.open('https://accounts.spotify.com/login', '_blank');
+            });
+        }
+
         loadPlaylistButton.addEventListener('click', () => {
             const link = playlistLinkInput.value.trim();
             if (!link) {
@@ -488,10 +474,8 @@
             spotifyPlayerIframe.contentWindow.postMessage(message, 'https://open.spotify.com/embed/');
         }
 
-        // --- AI Logic (sin cambios) ---
-        aiModeStudyButton.addEventListener('click', () => { /* ... */ });
-        aiModeCreativityButton.addEventListener('click', () => { /* ... */ });
-        getAiSuggestionButton.addEventListener('click', async () => { /* ... */ });
+
+        // --- AI Logic ---
         aiModeStudyButton.addEventListener('click', () => {
             currentAiMode = 'study';
             aiModeStudyButton.classList.add('active');
@@ -607,7 +591,7 @@
         }
 
 
-        // --- Ambient Audio Visualizer Logic (Vertical) ---
+        // --- Ambient Audio Visualizer Logic (Vertical, con buscador YouTube) ---
         if (ambientCanvasVertical && ambientAudioWarning && toggleAmbientVisualizerButton) {
             const ambientCtxVertical = ambientCanvasVertical.getContext("2d");
 
@@ -690,7 +674,7 @@
                     x += barWidth;
                 }
             }
-            // Re-added YouTube Search Form Logic
+            
             if (youtubeSearchForm) {
                 youtubeSearchForm.addEventListener("submit", function (e) {
                     e.preventDefault();
@@ -775,12 +759,9 @@
         }
         
         window.addEventListener('resize', () => {
-            if (ambientCanvasVertical && isAmbientVisualizerActive) { // Solo reajustar si está activo para evitar errores
+            if (ambientCanvasVertical && isAmbientVisualizerActive) { 
                 ambientCanvasVertical.width = ambientCanvasVertical.offsetWidth;
-                // Si el visualizador está activo y se redimensiona, podrías querer redibujar una vez
-                // o simplemente dejar que el siguiente frame de animación lo corrija.
-                // Por simplicidad, el siguiente frame lo corregirá.
-            } else if (ambientCanvasVertical) { // Asegurar que tenga dimensiones incluso si no está activo
+            } else if (ambientCanvasVertical) { 
                  ambientCanvasVertical.width = ambientCanvasVertical.offsetWidth;
             }
         });
